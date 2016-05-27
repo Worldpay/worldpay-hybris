@@ -1,0 +1,49 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform 
+# 
+# Copyright (c) 2000-2013 hybris AG
+# All rights reserved.
+#  
+# This software is the confidential and proprietary information of hybris 
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with hybris.
+#
+#  
+# -----------------------------------------------------------------------
+
+# you can put key/value pairs here.
+# Use Config.getParameter(..) to retrieve the values during runtime.
+
+
+# Specifies the location of the spring context file added automatically to the global platform application context.
+worldpayaddon.application-context=worldpayaddon-spring.xml
+
+yacceleratorstorefront.additionalWebSpringConfigs.worldpayaddon=classpath:/worldpayaddon/web/spring/worldpayaddon-web-spring.xml, classpath:/worldpayaddon/web/spring/b2c-multi-step-checkout-spring.xml
+yb2bacceleratorstorefront.additionalWebSpringConfigs.worldpayaddon=classpath:/worldpayaddon/web/spring/worldpayaddon-web-spring.xml, classpath:/worldpayaddon/web/spring/b2b-multi-step-checkout-spring.xml
+
+storefront.supportedUiExperienceLevels.electronics=DESKTOP,MOBILE
+storefront.supportedUiExperienceLevels.apparel-uk=DESKTOP,MOBILE
+storefront.supportedUiExperienceLevels.apparel-de=DESKTOP,MOBILE
+storefront.supportedUiExperienceLevels.powertools=DESKTOP,MOBILE
+
+# Payment Service provider.
+payment.service-provider.name=Worldpay
+
+# Set the HOP PCI strategy at this level so that it's consistent across store and cscockpit
+hop.pci.strategy.enabled=true
+
+worldpayaddon.javascript.paths.desktop=/desktop/common/js/worldpayaddon.js;/desktop/common/js/worldpayaddonCSE.js;/desktop/common/js/worldpayaddonRedirect.js;/desktop/common/js/worldpayaddonLightbox.js
+worldpayaddon.javascript.paths.responsive=/responsive/common/js/worldpayaddon.js;/responsive/common/js/worldpayaddonCSE.js;/responsive/common/js/worldpayaddonRedirect.js
+worldpayaddon.javascript.paths.mobile=/mobile/common/js/worldpayaddon.js;/mobile/common/js/worldpayaddonCSE.js;/mobile/common/js/worldpayaddonRedirect.js
+worldpayaddon.css.paths.desktop=/desktop/common/css/worldpayaddon.css
+worldpayaddon.css.paths.responsive=/responsive/common/css/worldpayaddon.css
+worldpayaddon.css.paths.mobile=/mobile/common/css/worldpayaddon.css
+
+
+### Remove the comment below to show the hosted order pre-post debug page (can be done on a per-site basis)
+#hop.debug.mode=true
+#hop.debug.mode.apparel-uk=true
+
+# The amount of time in seconds to wait before asking for the decline-code
+hop.decline.message.wait.timer.seconds=2

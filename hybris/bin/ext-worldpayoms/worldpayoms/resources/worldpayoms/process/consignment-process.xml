@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="redirectConsignmentByDeliveryMode"
+	name="consignment-process" processClass="de.hybris.platform.ordersplitting.model.ConsignmentProcessModel">
+	
+	<action id="redirectConsignmentByDeliveryMode" bean="redirectConsignmentByDeliveryModeAction">
+		<transition name="SHIP" to="waitForShipConsignment" />
+		<transition name="PICKUP" to="waitForPickupConsignment" />
+	</action>
+	
+	<wait id="waitForShipConsignment" prependProcessCode="true" then="waitForShipConsignment">
+		<case event="ConsignmentActionEvent">
+	    	<choice id="cancelConsignment" then="waitForConsignmentActionCompletion"/>
+	    	<choice id="confirmShipConsignment" then="confirmShipConsignment"/>
+	    	<choice id="manuallyReallocateConsignment" then="waitForConsignmentActionCompletion"/>
+	    	<choice id="packConsignment" then="makeReadyForShip"/>
+  		</case>
+	</wait>
+	
+	<wait id="waitForPickupConsignment" prependProcessCode="true" then="waitForPickupConsignment">
+		<case event="ConsignmentActionEvent">
+	    	<choice id="cancelConsignment" then="waitForConsignmentActionCompletion"/>
+	    	<choice id="confirmPickupConsignment" then="confirmPickupConsignment"/>
+	    	<choice id="packConsignment" then="makeReadyForPickup"/>
+  		</case>
+	</wait>
+	
+	<wait id="waitForConsignmentActionCompletion" then="verifyConsignmentCompletion" prependProcessCode="true"> 
+		<event>ActionCompletionEvent</event>
+	</wait>
+	
+	<action id="makeReadyForPickup" bean="makeReadyForPickupConsignmentAction">
+		<transition name="OK" to="waitForPickupConsignment" />
+	</action>
+	
+	<action id="makeReadyForShip" bean="makeReadyForShipConsignmentAction">
+		<transition name="OK" to="waitForShipConsignment" />
+	</action>
+	
+	<action id="verifyConsignmentCompletion" bean="verifyConsignmentCompletionAction">
+        <transition name="OK" to="consignmentProcessEnd"/>
+        <transition name="WAIT" to="redirectConsignmentByDeliveryMode"/>
+    </action>
+
+	<action id="confirmShipConsignment" bean="confirmShipConsignmentAction">
+		<transition name="OK" to="consignmentProcessEnd" />
+	</action>
+	
+	<action id="confirmPickupConsignment" bean="confirmPickupConsignmentAction">
+		<transition name="OK" to="consignmentProcessEnd" />
+	</action>
+	
+	<action id="consignmentProcessEnd" bean="consignmentProcessEndAction">
+		<transition name="OK" to="success" />
+	</action>
+
+	<end id="success" state="SUCCEEDED">Consignment process completed.</end>
+	
+</process>

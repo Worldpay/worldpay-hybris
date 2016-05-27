@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <collectiontypes>
+        <collectiontype code="TransactionToProcessSet" elementtype="PaymentTransactionType" autocreate="true" generate="true" type="set"/>
+    </collectiontypes>
+    <enumtypes>
+        <enumtype code="DefectiveReason" autocreate="true" generate="true">
+            <value code="NOT_APPLICABLE"/>
+            <value code="INVALID_AUTHENTICATED_SHOPPER_ID"/>
+            <value code="NO_PAYMENT_TRANSACTION_MATCHED"/>
+            <value code="PROCESSING_ERROR"/>
+        </enumtype>
+    </enumtypes>
+    <itemtypes>
+        <itemtype code="WorldpayOrderModification" generate="true" autocreate="true">
+            <deployment table="WPOrderModification" typecode="19030"/>
+            <attributes>
+                <attribute qualifier="code" type="java.lang.String">
+                    <persistence type="property"/>
+                    <modifiers optional="false" initial="true" unique="true"/>
+                </attribute>
+                <attribute qualifier="worldpayOrderCode" type="java.lang.String">
+                    <persistence type="property"/>
+                    <modifiers optional="false" initial="true"/>
+                </attribute>
+                <attribute qualifier="type" type="PaymentTransactionType">
+                    <description>PaymentTransactionType</description>
+                    <modifiers optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="processed" type="java.lang.Boolean">
+                    <description>Has the record been processed</description>
+                    <defaultvalue>false</defaultvalue>
+                    <modifiers optional="false"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="notified" type="java.lang.Boolean">
+                    <description>Has the record been notified</description>
+                    <defaultvalue>false</defaultvalue>
+                    <modifiers optional="false"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="defective" type="java.lang.Boolean">
+                    <description>Has the record created a defect</description>
+                    <defaultvalue>false</defaultvalue>
+                    <modifiers optional="false"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="defectiveReason" type="DefectiveReason">
+                    <description>Why the record was defective</description>
+                    <defaultvalue>em().getEnumerationValue("DefectiveReason", "NOT_APPLICABLE")</defaultvalue>
+                    <modifiers optional="false" />
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="defectiveCounter" type="java.lang.Integer">
+                    <description>Total number of defective modifications with same DefectiveReason, PaymentTransactionType and WorldpayOrderCode</description>
+                    <modifiers optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="orderNotificationMessage" type="java.lang.String">
+                    <description>OrderNotificationMessage</description>
+                    <modifiers optional="false" initial="true"/>
+                    <persistence type="property">
+                        <columntype database="oracle">
+                            <value>CLOB</value>
+                        </columntype>
+                        <columntype database="sap">
+                            <value>NCLOB</value>
+                        </columntype>
+                        <columntype>
+                            <value>HYBRIS.LONG_STRING</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="worldpayOrderCodeIdx">
+                    <key attribute="worldpayOrderCode"/>
+                </index>
+                <index name="worldpayOrderModification_UniqueIdx" unique="true">
+                    <key attribute="code"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="OrderModificationCronJob" autocreate="true" generate="true" extends="CronJob">
+            <attributes>
+                <attribute qualifier="typeOfPaymentTransactionToProcessSet" type="TransactionToProcessSet">
+                    <description>List of payment transaction types that will be processed</description>
+                    <modifiers/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="NotifyUnprocessedOrderModificationsCronJob" autocreate="true" generate="true" extends="CronJob">
+            <attributes>
+                <attribute qualifier="unprocessedTimeInDays" type="java.lang.Integer">
+                    <description>Max unprocessed time before ticket is created</description>
+                    <modifiers optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="CleanUpProcessedOrderModificationsCronJob" autocreate="true" generate="true" extends="CronJob">
+            <attributes>
+                <attribute qualifier="daysToWaitBeforeDeletion" type="java.lang.Integer">
+                    <description>Max unprocessed time before processed order modifications are deleted</description>
+                    <modifiers optional="false" initial="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="AbstractOrder" autocreate="false" generate="false">
+            <description>Extending Abstract Order to hold the worldpay order code</description>
+            <attributes>
+                <attribute qualifier="worldpayOrderCode" type="java.lang.String" generate="true" autocreate="true">
+                    <persistence type="property"/>
+                    <description>This is the code that Worldpay will use in their systems.</description>
+                </attribute>
+                <attribute qualifier="worldpayDeclineCode" type="java.lang.Integer" generate="true" autocreate="true">
+                    <persistence type="property"/>
+                    <description>Decline code of the transaction if it was refused</description>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="worldpayOrderCodeIdx">
+                    <key attribute="worldpayOrderCode"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+    </itemtypes>
+</items>

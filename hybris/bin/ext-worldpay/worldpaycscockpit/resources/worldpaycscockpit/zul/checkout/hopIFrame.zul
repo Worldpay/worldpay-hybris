@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+
+<window xmlns="http://www.zkoss.org/2005/zul" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:h="http://www.w3.org/1999/xhtml" 
+		xmlns:zk="http://www.zkoss.org/2005/zk"
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd "
+		id="win" 
+		border="none" 
+		width="600px" 
+		height="470px"
+		position="center" 
+		closable="false" 
+		sizable="false"
+		shadow="false">
+
+	<zscript>
+		postUrl = Executions.getCurrent().getParameter("postUrl");
+		debug = Executions.getCurrent().getParameter("debugMode");
+		
+		country = Executions.getCurrent().getParameter("country");
+		language = Executions.getCurrent().getParameter("language");
+		
+		successURL = Executions.getCurrent().getParameter("successURL");
+		pendingURL = Executions.getCurrent().getParameter("pendingURL");
+		failureURL = Executions.getCurrent().getParameter("failureURL");
+		cancelURL = Executions.getCurrent().getParameter("cancelURL");		
+		orderKey = Executions.getCurrent().getParameter("OrderKey");
+	</zscript>
+	
+	<h:form id="hopPostForm" action="${postUrl}" method="GET">
+		<h:input type="hidden" name="OrderKey" value="${orderKey}"/>
+		<grid id="grid" visible="false">
+			<rows>
+				<row>
+				    debugMode
+				    <textbox name="debugMode" value="${debug}"/>
+			    </row>
+				<row>
+				    country
+				    <textbox name="country" value="${country}"/>
+			    </row>
+				<row>
+				    language
+				    <textbox name="language" value="${language}"/>
+			    </row>
+				<row>
+				    successURL
+				    <textbox name="successURL" value="${successURL}"/>
+			    </row>
+				<row>
+				    pendingURL
+				    <textbox name="pendingURL" value="${pendingURL}"/>
+			    </row>
+				<row>
+				    failureURL
+				    <textbox name="failureURL" value="${failureURL}"/>
+			    </row>
+				<row>
+				    cancelURL
+				    <textbox name="cancelURL" value="${cancelURL}"/>
+			    </row>
+                <row>
+                    <h:input type="submit" value="Submit"/>
+                </row>
+            </rows>
+        </grid>
+	</h:form>
+
+	<zscript>
+		if (!debug.equals("true")) {
+			Clients.submitForm("hopPostForm");
+		} else {
+			grid.setVisible(true);
+		}
+	</zscript>
+</window>

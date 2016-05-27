@@ -1,0 +1,102 @@
+apply plugin: 'installer-platform-plugin'
+
+def localProps = {
+    customConfig 'local.properties'
+    property 'tomcat.generaloptions', '-Xmx4096M -XX:-UseLoopPredicate -XX:MaxPermSize=512M -XX:+HeapDumpOnOutOfMemoryError -ea -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dorg.tanukisoftware.wrapper.WrapperManager.mbean=true -Djava.endorsed.dirs="%CATALINA_HOME%/lib/endorsed" -Dcatalina.base=%CATALINA_BASE% -Dcatalina.home=%CATALINA_HOME% -Dfile.encoding=UTF-8 -Dlog4j.configuration=log4j_init_tomcat.properties -Djava.util.logging.config.file=jdk_logging.properties -Djava.io.tmpdir="${HYBRIS_TEMP_DIR}"'
+
+}
+
+def ext = {
+    scanPathWithAutoLoad '${HYBRIS_BIN_DIR}/ext-worldpay'
+    scanPathWithAutoLoad '${HYBRIS_BIN_DIR}/ext-worldpayoms'
+
+    extName 'ldap'
+    extName 'virtualjdbc'
+    extName 'springintegrationlibs'
+    extName 'hmc'
+    extName 'voucher'
+    extName 'platformhmc'
+    extName 'promotions'
+    extName 'customerreview'
+    extName 'backoffice'
+    extName 'cockpit'
+    extName 'admincockpit'
+    extName 'reportcockpit'
+    extName 'productcockpit'
+    extName 'solrfacetsearch'
+    extName 'basecommerce'
+    extName 'cms2'
+    extName 'cms2lib'
+    extName 'btg'
+    extName 'ticketsystem'
+    extName 'payment'
+    extName 'cmscockpit'
+    extName 'solrfacetsearchhmc'
+    extName 'commerceservices'
+    extName 'commercewebservicescommons'
+    extName 'acceleratorservices'
+    extName 'acceleratorcms'
+    extName 'yacceleratorcore'
+    extName 'commercefacades'
+    extName 'acceleratorfacades'
+    extName 'addonsupport'
+    extName 'acceleratorstorefrontcommons'
+    extName 'yacceleratorfacades'
+    extName 'commercesearch'
+    extName 'commercesearchhmc'
+    extName 'acceleratorwebservicesaddon'
+    extName 'yaddon'
+    extName 'yacceleratorinitialdata'
+    extName 'apparelstore'
+    extName 'yacceleratorstorefront'
+    extName 'cscockpit'
+    extName 'yacceleratorcockpits'
+    extName 'instore'
+    extName 'electronicsstore'
+    extName 'warehousingbackoffice'
+    extName 'warehousing'
+    extName 'yacceleratorordermanagement'
+    extName 'customersupportbackoffice'
+    extName 'platformbackoffice'
+    extName 'solrserver'
+    extName 'ordermanagementaddon'
+    extName 'warehousingwebservices'
+    extName 'warehousingfacade'
+    extName 'ordermanagementwebservices'
+    extName 'ordermanagementfacade'
+}
+
+def config = {
+    localProperties localProps
+    extensions ext
+}
+
+task setup << {
+    apply plugin: 'installer-addon-plugin'
+
+    def pl = platform(config)
+    pl.setup()
+
+    pl.project.addons {
+        names "worldpayaddon,worldpaynotificationaddon,worldpaysampledataaddon,ordermanagementaddon"
+        template "yacceleratorstorefront"
+        storeFronts "yacceleratorstorefront"
+        platform pl
+    }
+}
+
+task build << {
+    def pl = platform(config)
+    pl.build()
+}
+
+task initialize << {
+    def pl = platform(config)
+    pl.build()
+    pl.initialize()
+}
+
+task start << {
+    def pl = platform(config)
+    pl.start()
+}

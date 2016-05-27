@@ -1,0 +1,53 @@
+$contentCatalog=apparel-deContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCms=jar:com.worldpay.constants.WorldpaysampledataaddonConstants&/worldpaysampledataaddon/import/cockpits/cmscockpit
+
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$siteResource=jar:com.worldpay.constants.WorldpaysampledataaddonConstants&/worldpaysampledataaddon/import/images/mobile
+$picture=media(code, $contentCV);
+$lang=de
+
+#% if: !"responsive".equalsIgnoreCase(Config.getParameter("commerceservices.default.desktop.ui.experience"));
+
+INSERT_UPDATE WorldpayCCComponent;uid[unique=true];$contentCV[unique=true];name;$picture[lang=$lang]
+;creditCardComponentMobile;;"Credit Card";cc-icon-mobile
+
+# Create medias
+INSERT_UPDATE Media;code[unique=true];$media;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)
+;alipay-icon-mobile;$siteResource/alipay-icon.png;;;images
+;cc-icon-mobile;$siteResource/cc-icon.png;;;images
+;cup-icon-mobile;$siteResource/cup-icon.png;;;images
+;enets-icon-mobile;$siteResource/enets-icon.jpg;;;images
+;sofort-icon-mobile;$siteResource/sofort-icon.png;;;images
+;paypal-icon-mobile;$siteResource/paypal-icon.png;;;images
+;boleto-icon-mobile;$siteResource/boleto-icon.png;;;images
+;postepay-icon-mobile;$siteResource/postepay-icon.png;;;images
+;poli-icon-mobile;$siteResource/poli-icon.png;;;images
+;polinz-icon-mobile;$siteResource/polinz-icon.png;;;images
+;mistercash-icon-mobile;$siteResource/mistercash-icon.png;;;images
+;nordea-icon-mobile;$siteResource/nordea-icon.png;;;images
+;ideal-icon-mobile;$siteResource/ideal-icon.png;;;images
+
+INSERT_UPDATE WorldpayAPMComponent;uid[unique=true];$contentCV[unique=true];name;apmConfiguration(code);$picture[lang=$lang]
+;sofortComponentMobile;;"SOFORT";SOFORT-SSL;sofort-icon-mobile
+;payPalComponentMobile;;"PayPal";PAYPAL-EXPRESS;paypal-icon-mobile
+;boletoComponentMobile;;"Boleto";BOLETO-SSL;boleto-icon-mobile
+;postepayComponentMobile;;"PostePay";POSTEPAY-SSL;postepay-icon-mobile
+;poliComponentMobile;;"POLi";POLI-SSL;poli-icon-mobile
+;polinzComponentMobile;;"POLi - NZ";POLINZ-SSL;polinz-icon-mobile
+;mistercashComponentMobile;;"Mistercash";MISTERCASH-SSL;mistercash-icon-mobile
+;nordeaComponentMobile;;"Nordea";BANKLINKNORDEA-SSL;nordea-icon-mobile
+;idealComponentMobile;;"iDeal";IDEAL-SSL;ideal-icon-mobile
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;MobileWorldpayPaymentButtonsSlot;creditCardComponentMobile,payPalComponentMobile,sofortComponentMobile,boletoComponentMobile,postepayComponentMobile,poliComponentMobile,polinzComponentMobile,mistercashComponentMobile,nordeaComponentMobile,idealComponentMobile
+
+# CMS Cockpit Preview Image for WorldpayPaymentAndBillingCheckoutPage
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;;worldpayPaymentAndBillingCheckoutMobilePagePreview;text/png;WorldpayPaymentAndBillingMobileApparelDE.png;$jarResourceCms/preview-images/apparel-de/WorldpayPaymentAndBillingMobileApparelDE.png
+
+# Preview for WorldpayPaymentAndBillingCheckoutPage
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];previewImage(code,$contentCV)
+;;mobile-worldpayPaymentAndBillingCheckoutPage;worldpayPaymentAndBillingCheckoutMobilePagePreview
+
+#% endif:

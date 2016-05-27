@@ -1,0 +1,5 @@
+INSERT_UPDATE CockpitUIConfigurationMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;worldpay_paymenttransactionentry_paymenttransactionlistdetail_cockpitgroup_ui_config;text/xml; PaymentTransactionEntry_PaymentTransactionListDetail_CockpitGroup.xml; jar:com.worldpay.jalo.WorldpaycscockpitManager&/import/config/PaymentTransactionEntry_PaymentTransactionListDetail_CockpitGroup.xml
+
+INSERT_UPDATE CockpitUIComponentConfiguration;code[unique=true];factoryBean;objectTemplateCode[unique=true];principal(uid)[unique=true];media(code);
+;worldpay_paymentTransactionListDetail;listViewConfigurationFactory;PaymentTransactionEntry;cockpitgroup;worldpay_paymenttransactionentry_paymenttransactionlistdetail_cockpitgroup_ui_config;

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="worldpayTestDataSystemSetup" class="com.worldpay.worldpaytests.setup.WorldpayTestDataSystemSetup" parent="abstractCoreSystemSetup">
+		<property name="worldpayOrderTestData" ref="worldpayOrderTestData"/>
+		<property name="cronjobService" ref="cronJobService"/>
+		<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<bean id="worldpayOrderTestData" class="com.worldpay.worldpaytests.orders.WorldpayOrderTestData">
+		<property name="impersonationService" ref="impersonationService"/>
+		<property name="cmsAdminSiteService" ref="cmsAdminSiteService"/>
+		<property name="checkoutFacade" ref="checkoutFacade"/>
+		<property name="cartService" ref="cartService"/>
+		<property name="cartFacade" ref="cartFacade"/>
+		<property name="commerceCheckoutService" ref="commerceCheckoutService"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="i18nService" ref="commonI18NService"/>
+		<property name="baseStoreService" ref="baseStoreService"/>
+		<property name="configurationService" ref="configurationService"/>
+		<property name="worldpayPaymentTransactionTestData" ref="worldpayPaymentTransactionTestData"/>
+		<property name="worldpayPaymentInfoTestData" ref="worldpayPaymentInfoTestData"/>
+		<property name="worldpayCustomerTestData" ref="worldpayCustomerTestData"/>
+		<property name="userService" ref="userService"/>
+	</bean>
+
+	<bean id="worldpayPaymentTransactionTestData" class="com.worldpay.worldpaytests.orders.WorldpayPaymentTransactionTestData">
+		<property name="orderModificationSerialiser" ref="orderModificationSerialiser"/>
+		<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<bean id="worldpayPaymentInfoTestData" class="com.worldpay.worldpaytests.orders.WorldpayPaymentInfoTestData">
+		<property name="impersonationService" ref="impersonationService"/>
+		<property name="customerAccountService" ref="customerAccountService"/>
+		<property name="i18nService" ref="commonI18NService"/>
+	</bean>
+	<bean id="worldpayCustomerTestData" class="com.worldpay.worldpaytests.orders.WorldpayCustomerTestData">
+		<property name="addressReversePopulator" ref="addressReversePopulator"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="userService" ref="userService"/>
+		<property name="customerAccountService" ref="customerAccountService"/>
+	</bean>
+</beans>

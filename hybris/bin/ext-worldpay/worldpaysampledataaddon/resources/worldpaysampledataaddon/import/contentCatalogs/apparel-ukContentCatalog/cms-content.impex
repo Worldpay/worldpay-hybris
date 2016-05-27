@@ -1,0 +1,47 @@
+$contentCatalog=apparel-ukContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCms=jar:com.worldpay.constants.WorldpaysampledataaddonConstants&/worldpaysampledataaddon/import/cockpits/cmscockpit
+
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$siteResource=jar:com.worldpay.constants.WorldpaysampledataaddonConstants&/worldpaysampledataaddon/import/images/desktop
+$picture=media(code, $contentCV);
+$lang=en
+
+# Create medias
+INSERT_UPDATE Media;code[unique=true];$media;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)
+;alipay-icon;$siteResource/alipay-icon.png;;;images
+;cc-icon;$siteResource/cc-icon.png;;;images
+;cup-icon;$siteResource/cup-icon.png;;;images
+;enets-icon;$siteResource/enets-icon.jpg;;;images
+;paypal-icon;$siteResource/paypal-icon.png;;;images
+;boleto-icon;$siteResource/boleto-icon.png;;;images
+;postepay-icon;$siteResource/postepay-icon.png;;;images
+;poli-icon;$siteResource/poli-icon.png;;;images
+;polinz-icon;$siteResource/polinz-icon.png;;;images
+;mistercash-icon;$siteResource/mistercash-icon.png;;;images
+;nordea-icon;$siteResource/nordea-icon.png;;;images
+;ideal-icon;$siteResource/ideal-icon.png;;;images
+
+INSERT_UPDATE WorldpayCCComponent;uid[unique=true];$contentCV[unique=true];name;$picture[lang=$lang]
+;creditCardComponent;;"Credit Card";cc-icon
+
+INSERT_UPDATE WorldpayAPMComponent;uid[unique=true];$contentCV[unique=true];name;apmConfiguration(code);$picture[lang=$lang]
+;payPalComponent;;"PayPal";PAYPAL-EXPRESS;paypal-icon
+;boletoComponent;;"Boleto";BOLETO-SSL;boleto-icon
+;postepayComponent;;"PostePay";POSTEPAY-SSL;postepay-icon
+;poliComponent;;"POLi";POLI-SSL;poli-icon
+;polinzComponent;;"POLi - NZ";POLINZ-SSL;polinz-icon
+;mistercashComponent;;"Mistercash";MISTERCASH-SSL;mistercash-icon
+;nordeaComponent;;"Nordea";BANKLINKNORDEA-SSL;nordea-icon
+;idealComponent;;"iDeal";IDEAL-SSL;ideal-icon
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;WorldpayPaymentButtonsSlot;creditCardComponent,payPalComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,idealComponent
+
+# CMS Cockpit Preview Image for WorldpayPaymentAndBillingCheckoutPage
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;;worldpayPaymentAndBillingCheckoutPagePreview;text/png;WorldpayPaymentAndBillingApparelUK.png;$jarResourceCms/preview-images/apparel-uk/WorldpayPaymentAndBillingApparelUK.png
+
+# Preview for WorldpayPaymentAndBillingCheckoutPage
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];previewImage(code,$contentCV)
+;;worldpayPaymentAndBillingCheckoutPage;worldpayPaymentAndBillingCheckoutPagePreview

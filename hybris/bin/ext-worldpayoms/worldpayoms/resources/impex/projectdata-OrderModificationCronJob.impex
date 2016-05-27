@@ -1,0 +1,2 @@
+INSERT_UPDATE OrderModificationCronJob;code[unique=true];job(code);sessionLanguage(isoCode)[default=en];typeOfPaymentTransactionToProcessSet(code)[mode=append]
+;orderModificationProcessorJob;orderModificationProcessorJobPerformable;;REFUND_FOLLOW_ON,SETTLED

@@ -1,0 +1,120 @@
+######
+## PARAMETERS REQUIRED FOR THIS SCRIPT
+##
+##   * contentCatalog   - content catalog id
+##   * addonExtensionName - extension name of the ui addon
+#######
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCmsCockpit=jar:com.worldpay.constants.WorldpayaddonConstants&/worldpayaddon/import/cockpits/cmscockpit
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+
+#% if: !"responsive".equalsIgnoreCase(Config.getParameter("commerceservices.default.desktop.ui.experience"));
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;restrictedPageTypes(code);active[default=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator];frontendTemplateName
+;;WorldpayMobilePaymentAndBillingCheckoutPageTemplate;Worldpay Mobile Redirect Payment Page Template;WorldpayPaymentPage;;$jarResourceCmsCockpit/structure-view/mobile/structure_WorldpayPaymentAndBillingCheckoutPageTemplate.vm;addon:/$addonExtensionName/pages/checkout/multi/worldpayChooseRedirectPaymentDetailsPage
+;;WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate;Worldpay Mobile CSE Payment Page Template;WorldpayPaymentPage;;$jarResourceCmsCockpit/structure-view/mobile/structure_WorldpayCSEPaymentAndBillingCheckoutPageTemplate.vm;addon:/$addonExtensionName/pages/checkout/multi/worldpayChooseCSEPaymentDetailsPage
+;;WorldpayMobileIframePaymentAndBillingCheckoutPageTemplate;Worldpay Mobile iFrame Payment Page Template;WorldpayPaymentPage;;$jarResourceCmsCockpit/structure-view/mobile/structure_WorldpayIframePaymentAndBillingCheckoutPageTemplate.vm;addon:/$addonExtensionName/pages/checkout/multi/worldpayChooseIframePaymentDetailsPage
+
+# Content Pages
+INSERT_UPDATE WorldpayPaymentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='false'];approvalStatus(code)[default='approved'];homepage[default='false'];restrictions(uid,$contentCV)[default='MobileExperienceRestriction'];onlyOneRestrictionMustApply[default='false']
+;;mobile-worldpayPaymentAndBillingCheckoutPage;Worldpay Mobile Payment Page;WorldpayMobilePaymentAndBillingCheckoutPageTemplate;worldpayPaymentAndBillingCheckoutStep
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active[default=true]
+;;MobileWorldpayPaymentButtonsSlot;"Payment Buttons"
+
+# Bind Content Slots to the Worldpay Payment And Billing Checkout Page Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='WorldpayMobilePaymentAndBillingCheckoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;MobileSiteLogo-WorldpayPaymentAndBillingCheckoutPage;SiteLogo;;MobileSiteLogoSlot;true
+;;MobileSearchBox-WorldpayPaymentAndBillingCheckoutPage;SearchBox;;MobileSearchBoxSlot;true
+;;MobileHomepageLink-WorldpayPaymentAndBillingCheckoutPage;HomepageNavLink;;MobileHomepageNavLinkSlot;true
+;;MobileNavigationBar-WorldpayPaymentAndBillingCheckoutPage;NavigationBar;;MobileNavigationBarSlot;true
+;;MobileNavigationMenuBar-WorldpayPaymentAndBillingCheckoutPage;NavigationMenuBar;;MobileNavigationMenuBarSlot;true
+;;MobilePaymentButtons-WorldpayPaymentAndBillingCheckoutPage;PaymentButtons;;MobileWorldpayPaymentButtonsSlot;true
+;;MobileFooter-WorldpayPaymentAndBillingCheckoutPage;Footer;;MobileFooterSlot;true
+;;MobileNavContent-WorldpayPaymentAndBillingCheckoutPage;NavContent;;MobileNavContentSlot;true
+;;MobileTopHeaderSlot-WorldpayPaymentAndBillingCheckoutPage;TopHeaderSlot;;MobileTopHeaderSlot;true
+;;MobileNavigationSlot-WorldpayPaymentAndBillingCheckoutPage;NavigationSlot;;MobileNavigationSlot;true
+;;MobileBottomHeaderSlot-WorldpayPaymentAndBillingCheckoutPage;BottomHeaderSlot;;MobileBottomHeaderSlot;true
+;;MobilePlaceholderContentSlot-WorldpayPaymentAndBillingCheckoutPage;PlaceholderContentSlot;;MobilePlaceholderContentSlot;true
+
+# Bind Content Slots to the Worldpay CSE Payment And Billing Checkout Page Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;MobileSiteLogo-WorldpayCSEPaymentAndBillingCheckoutPage;SiteLogo;;MobileSiteLogoSlot;true
+;;MobileSearchBox-WorldpayCSEPaymentAndBillingCheckoutPage;SearchBox;;MobileSearchBoxSlot;true
+;;MobileHomepageLink-WorldpayCSEPaymentAndBillingCheckoutPage;HomepageNavLink;;MobileHomepageNavLinkSlot;true
+;;MobileNavigationBar-WorldpayCSEPaymentAndBillingCheckoutPage;NavigationBar;;MobileNavigationBarSlot;true
+;;MobileNavigationMenuBar-WorldpayCSEPaymentAndBillingCheckoutPage;NavigationMenuBar;;MobileNavigationMenuBarSlot;true
+;;MobilePaymentButtons-WorldpayCSEPaymentAndBillingCheckoutPage;PaymentButtons;;MobileWorldpayPaymentButtonsSlot;true
+;;MobileFooter-WorldpayCSEPaymentAndBillingCheckoutPage;Footer;;MobileFooterSlot;true
+;;MobileNavContent-WorldpayCSEPaymentAndBillingCheckoutPage;NavContent;;MobileNavContentSlot;true
+;;MobileTopHeaderSlot-WorldpayCSEPaymentAndBillingCheckoutPage;TopHeaderSlot;;MobileTopHeaderSlot;true
+;;MobileNavigationSlot-WorldpayCSEPaymentAndBillingCheckoutPage;NavigationSlot;;MobileNavigationSlot;true
+;;MobileBottomHeaderSlot-WorldpayCSEPaymentAndBillingCheckoutPage;BottomHeaderSlot;;MobileBottomHeaderSlot;true
+;;MobilePlaceholderContentSlot-WorldpayCSEPaymentAndBillingCheckoutPage;PlaceholderContentSlot;;MobilePlaceholderContentSlot;true
+
+# Bind Content Slots to the Worldpay iFrame Payment And Billing Checkout Page Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='WorldpayMobileIframePaymentAndBillingCheckoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;MobileSiteLogo-WorldpayCIframePaymentAndBillingCheckoutPage;SiteLogo;;MobileSiteLogoSlot;true
+;;MobileSearchBox-WorldpayIframePaymentAndBillingCheckoutPage;SearchBox;;MobileSearchBoxSlot;true
+;;MobileHomepageLink-WorldpayIframePaymentAndBillingCheckoutPage;HomepageNavLink;;MobileHomepageNavLinkSlot;true
+;;MobileNavigationBar-WorldpayIframePaymentAndBillingCheckoutPage;NavigationBar;;MobileNavigationBarSlot;true
+;;MobileNavigationMenuBar-WorldpayIframePaymentAndBillingCheckoutPage;NavigationMenuBar;;MobileNavigationMenuBarSlot;true
+;;MobilePaymentButtons-WorldpayIframePaymentAndBillingCheckoutPage;PaymentButtons;;MobileWorldpayPaymentButtonsSlot;true
+;;MobileFooter-WorldpayIframePaymentAndBillingCheckoutPage;Footer;;MobileFooterSlot;true
+;;MobileNavContent-WorldpayIframePaymentAndBillingCheckoutPage;NavContent;;MobileNavContentSlot;true
+;;MobileTopHeaderSlot-WorldpayIframePaymentAndBillingCheckoutPage;TopHeaderSlot;;MobileTopHeaderSlot;true
+;;MobileNavigationSlot-WorldpayIframePaymentAndBillingCheckoutPage;NavigationSlot;;MobileNavigationSlot;true
+;;MobileBottomHeaderSlot-WorldpayIframePaymentAndBillingCheckoutPage;BottomHeaderSlot;;MobileBottomHeaderSlot;true
+;;MobilePlaceholderContentSlot-WorldpayIframePaymentAndBillingCheckoutPage;PlaceholderContentSlot;;MobilePlaceholderContentSlot;true
+
+# ContentSlotNames for WorldpayPaymentAndBillingCheckoutPageTemplate
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='WorldpayMobilePaymentAndBillingCheckoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;SearchBox;;;searchbox
+;NavigationBar;;;navigation
+;NavigationMenuBar;;;navigation
+;TopContent;;;mobile
+;BottomContent;;;mobile
+;PaymentButtons;;;worldpaymobilepaymentbuttons
+;Footer;;;footer
+;NavContent;;FooterComponent;navigation
+;TopHeaderSlot;;;mobile
+;NavigationSlot;;;mobile
+;BottomHeaderSlot;;;mobile
+;PlaceholderContentSlot;;;mobile
+
+# ContentSlotNames for WorldpayCSEPaymentAndBillingCheckoutPageTemplate
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='WorldpayCSEPaymentAndBillingCheckoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;SearchBox;;;searchbox
+;NavigationBar;;;navigation
+;NavigationMenuBar;;;navigation
+;TopContent;;;mobile
+;BottomContent;;;mobile
+;PaymentButtons;;;worldpaymobilepaymentbuttons
+;Footer;;;footer
+;NavContent;;FooterComponent;navigation
+;TopHeaderSlot;;;mobile
+;NavigationSlot;;;mobile
+;BottomHeaderSlot;;;mobile
+;PlaceholderContentSlot;;;mobile
+
+# ContentSlotNames for WorldpayIframePaymentAndBillingCheckoutPageTemplate
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='WorldpayIframePaymentAndBillingCheckoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;SearchBox;;;searchbox
+;NavigationBar;;;navigation
+;NavigationMenuBar;;;navigation
+;TopContent;;;mobile
+;BottomContent;;;mobile
+;PaymentButtons;;;worldpaymobilepaymentbuttons
+;Footer;;;footer
+;NavContent;;FooterComponent;navigation
+;TopHeaderSlot;;;mobile
+;NavigationSlot;;;mobile
+;BottomHeaderSlot;;;mobile
+;PlaceholderContentSlot;;;mobile
+
+#% endif:

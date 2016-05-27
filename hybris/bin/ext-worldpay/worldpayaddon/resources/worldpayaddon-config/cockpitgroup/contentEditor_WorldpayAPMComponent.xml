@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="content-editor.xsd"
+                hideEmpty="false" hideReadOnly="false" groupCollections="false">
+    <template>
+        <![CDATA[
+		<table width="100%" style="margin: 0; padding: 0">
+			<tbody>
+				<tr>
+					<td colspan="2"><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMComponent.media"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="list" value="WorldpayAPMComponent.apmConfiguration"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+			</tbody>
+		</table>
+	]]>
+    </template>
+    <custom-editors>
+        <property qualifier="WorldpayAPMComponent.media" editorCode="simpleCelumReferenceSelector">
+            <parameter>
+                <name>mimeTypes</name>
+                <value>image/jpeg;image/gif;image/png</value>
+            </parameter>
+            <parameter>
+                <name>allowCreate</name>
+                <value>true</value>
+            </parameter>
+            <parameter>
+                <name>imageHeight</name>
+                <value>80px</value>
+            </parameter>
+            <parameter>
+                <name>restrictToCreateTypes</name>
+                <value>Media,CelumAsset+</value>
+            </parameter>
+            <parameter>
+                <name>predefinedValuesStrategy</name>
+                <value>imageMediaPredefinedValuesStrategy</value>
+            </parameter>
+        </property>
+        <property qualifier="WorldpayAPMComponent.apmConfiguration" editorCode="default" >
+        	<parameter>
+                <name>allowCreate</name>
+                <value>true</value>
+            </parameter>
+        </property>
+    </custom-editors>
+</content-editor>

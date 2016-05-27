@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor>
+    <group qualifier="General" visible="true" initially-opened="true">
+        <label key="cockpit.config.label.General" />
+        <property qualifier="WorldpayAPMConfiguration.code"/>
+		<property qualifier="WorldpayAPMConfiguration.name"/>
+		<property qualifier="WorldpayAPMConfiguration.description">
+			<parameter>
+				<name>rows</name>
+				<value>3</value>
+			</parameter>
+		</property>
+		<property qualifier="WorldpayAPMConfiguration.autoCancelPendingTimeoutInMinutes"/>
+		<property qualifier="WorldpayAPMConfiguration.countries"/>
+		<property qualifier="WorldpayAPMConfiguration.currencies"/>
+		<property qualifier="WorldpayAPMConfiguration.currencyRanges">
+			<parameter>
+				<name>allowCreate</name>
+				<value>true</value>
+			</parameter> 
+		</property>
+    </group>
+
+  
+    <custom-group
+            class="de.hybris.platform.cockpit.services.config.impl.UnassignedEditorSectionConfiguration"
+            qualifier="unassigned"
+            initially-opened="false"
+            visible="false">
+        <label key="cockpit.config.label.Other" />
+    </custom-group>
+</editor>

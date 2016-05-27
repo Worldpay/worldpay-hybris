@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="resources"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/worldpayapi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cscockpit"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project name="custom.acc.ant.sonar" xmlns:jacoco="antlib:org.jacoco.ant">
+
+    <property environment="env"/>
+
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="./lib/jacocoant.jar"/>
+    </taskdef>
+
+    <target name="jacocounittests" description="runs all tests with jacoco attached">
+        <echo message="Executing custom jacocoalltests target"/>
+
+        <jacoco:agent property="agentvmparam"
+                      append="true"
+                      output="file"
+                      destfile="jacoco.exec"
+                      includes="com.worldpay.*"/>
+
+        <property name="testclasses.extensions" value="${testclasses.extensions}"/>
+        <property name="testclasses.packages" value="${testclasses.packages}"/>
+        <property name="testclasses.addonname" value="${testclasses.addonname}"/>
+
+        <ant dir="../../hybris/bin/platform" target="allwebtests" inheritrefs="false">
+            <property name="standalone.javaoptions" value="${agentvmparam}"/>
+        </ant>
+
+        <ant dir="../../hybris/bin/platform" target="unittests" inheritrefs="false">
+            <property name="standalone.javaoptions" value="${agentvmparam}"/>
+        </ant>
+    </target>
+</project>

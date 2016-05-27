@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="Worldpayresponsemock" managername="WorldpayresponsemockManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="worldpayresponsemock">
+        <requires-extension name="addonsupport"/>
+        <requires-extension name="worldpayapi"/>
+        <coremodule generated="true" manager="com.worldpay.worldpayresponsemock.jalo.WorldpayresponsemockManager" packageroot="com.worldpay.worldpayresponsemock"/>
+        <webmodule jspcompile="false" webroot="/worldpayresponsemock"/>
+    </extension>
+
+</extensioninfo>

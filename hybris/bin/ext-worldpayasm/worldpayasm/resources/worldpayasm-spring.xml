@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ [y] hybris Platform
+  ~ 
+  ~ Copyright (c) 2000-2016 SAP SE
+  ~ All rights reserved.
+  ~ 
+  ~ This software is the confidential and proprietary information of SAP 
+  ~ Hybris ("Confidential Information"). You shall not disclose such 
+  ~ Confidential Information and shall use it only in accordance with the 
+  ~ terms of the license agreement you entered into with SAP Hybris.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <alias name="defaultWorldpayASMService" alias="worldpayASMService"/>
+    <bean id="defaultWorldpayASMService" class="com.worldpay.worldpayasm.asm.impl.DefaultWorldpayASMService">
+        <property name="sessionService" ref="sessionService"/>
+    </bean>
+
+    <alias name="defaultWorldpayASMMerchantStrategy" alias="worldpayMerchantStrategy"/>
+    <bean id="defaultWorldpayASMMerchantStrategy" class="com.worldpay.worldpayasm.strategies.impl.DefaultWorldpayASMMerchantStrategy">
+        <property name="worldpayMerchantConfigDataService" ref="worldpayMerchantConfigDataService"/>
+        <property name="worldpayASMService" ref="worldpayASMService"/>
+    </bean>
+</beans>

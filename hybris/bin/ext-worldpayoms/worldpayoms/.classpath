@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="resources"/>
+	<classpathentry exported="true" kind="src" output="eclipsebin/classes" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry kind="src" path="backoffice/src"/>
+	<classpathentry kind="src" path="backoffice/testsrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/worldpayapi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/worldpaynotificationaddon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/payment"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/warehousing"/>
+	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/cockpitframework-2.4.0-RC8.jar"/>
+	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zk-8.0.0.jar"/>
+	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/backoffice-widgets-2.4.0-RC8.jar"/>
+	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/cockpitcore-2.4.0-RC8.jar"/>
+	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zul-8.0.0.jar"/>
+	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/cockpit-data-integration-2.4.0-RC8.jar"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

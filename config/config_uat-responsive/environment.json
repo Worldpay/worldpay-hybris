@@ -1,0 +1,26 @@
+{
+  "environment": {
+    "name": "uat-responsive",
+
+    "storefronts": {
+      "electronicsContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,postepayComponent,mistercashComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayCSEPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-ukContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,postepayComponent,mistercashComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayIframePaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileIframePaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-deContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,postepayComponent,mistercashComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayIframePaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileIframePaymentAndBillingCheckoutPageTemplate"
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+    <enum class="com.worldpay.enums.token.TokenEvent">
+        <value>MATCH</value>
+        <value>NEW</value>
+        <value>CONFLICT</value>
+        <value>USE</value>
+    </enum>
+
+	<bean class="com.worldpay.hostedorderpage.data.RedirectAuthoriseResult">
+		<property name="orderKey" type="java.lang.String"/>
+		<property name="orderCode" type="java.lang.String"/>
+		<property name="paymentStatus" type="java.lang.String"/>
+		<property name="pending" type="java.lang.Boolean"/>
+		<property name="saveCard" type="java.lang.Boolean"/>
+	</bean>
+    
+    <bean class="com.worldpay.order.data.WorldpayCCPaymentInfoData" extends="de.hybris.platform.commercefacades.order.data.CCPaymentInfoData">
+        <property name="debugMode" type="boolean"/>
+        <property name="additionalInfo" type="com.worldpay.order.data.WorldpayAdditionalInfoData"/>
+    </bean>
+    
+    <bean class="com.worldpay.order.data.WorldpayAdditionalInfoData">
+        <property name="sessionId" type="java.lang.String"/>
+        <property name="customerIPAddress" type="java.lang.String"/>
+        <property name="acceptHeader" type="java.lang.String"/>
+        <property name="userAgentHeader" type="java.lang.String"/>
+        <property name="deviceType" type="java.lang.String"/>
+        <property name="securityCode" type="java.lang.String"/>
+        <property name="customerEmail" type="java.lang.String"/>
+        <property name="authenticatedShopperId" type="java.lang.String"/>
+        <property name="uiExperienceLevel" type="de.hybris.platform.commerceservices.enums.UiExperienceLevel"/>
+        <property name="savedCardPayment" type="boolean"/>
+    </bean>
+
+    <bean class="com.worldpay.config.merchant.WorldpayMerchantConfigData">
+        <property name="code" type="java.lang.String"/>
+        <property name="password" type="java.lang.String"/>
+        <property name="macValidation" type="java.lang.Boolean"/>
+        <property name="macSecret" type="java.lang.String"/>
+        <property name="csePublicKey" type="java.lang.String"/>
+        <property name="installationId" type="java.lang.String"/>
+        <property name="statementNarrative" type="java.lang.String"/>
+        <property name="orderContent" type="java.lang.String"/>
+        <property name="excludedPaymentTypes" type="java.util.List&lt;java.lang.String>"/>
+        <property name="includedPaymentTypes" type="java.util.List&lt;java.lang.String>"/>
+    </bean>
+
+    <bean class="com.worldpay.data.AdditionalAuthInfo">
+        <property name="installationId" type="java.lang.String"/>
+        <property name="statementNarrative" type="java.lang.String"/>
+        <property name="orderContent" type="java.lang.String"/>
+        <property name="usingShippingAsBilling" type="java.lang.Boolean"/>
+        <property name="saveCard" type="java.lang.Boolean"/>
+        <property name="paymentMethod" type="java.lang.String"/>
+        <property name="paResponse" type="java.lang.String"/>
+    </bean>
+
+    <bean class="com.worldpay.data.CSEAdditionalAuthInfo" extends="com.worldpay.data.AdditionalAuthInfo">
+        <property name="encryptedData" type="java.lang.String"/>
+        <property name="cardHolderName" type="java.lang.String"/>
+        <property name="expiryYear" type="java.lang.String"/>
+        <property name="expiryMonth" type="java.lang.String"/>
+    </bean>
+
+    <bean class="com.worldpay.data.BankTransferAdditionalAuthInfo" extends="com.worldpay.data.AdditionalAuthInfo">
+        <property name="shopperBankCode" type="java.lang.String"/>
+    </bean>
+</beans>

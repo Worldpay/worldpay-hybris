@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<configuration xmlns="hybris.de/schemas/hmc/generic"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="hybris.de/schemas/hmc/generic hmc.xsd">
+
+    <action type="toolbar" classname="com.worldpay.worldpayapi.hmc.WorldpayAddonInfoToolbarAction" name="worldpayToolbarAction"
+            icon="worldpay.gif" align="left"/>
+
+    <explorertree mode="append">
+        <group name="worldpay" description="group.worldpay.description">
+            <typeref type="WorldpayAPMConfiguration"/>
+            <typeref type="WorldpayBankConfiguration"/>
+        </group>
+    </explorertree>
+
+    <type name="WorldpayCurrencyRange" mode="append">
+        <organizer>
+            <search mode="replace">
+                <condition attribute="currency" operator="equal"/>
+            </search>
+            <result mode="append">
+                <listview mode="replace">
+                    <itemlayout>
+                        <attribute name="currency"/>
+                        <attribute name="min"/>
+                        <attribute name="max"/>
+                    </itemlayout>
+                </listview>
+            </result>
+            <editor mode="append">
+                <tab name="properties" position="0">
+                    <section name="section.WorldpayCurrencyRange">
+                        <listlayout>
+                            <attribute name="currency"/>
+                            <attribute name="min"/>
+                            <attribute name="max"/>
+                        </listlayout>
+                    </section>
+                </tab>
+            </editor>
+        </organizer>
+    </type>
+
+    <type name="WorldpayAPMConfiguration" mode="append">
+        <organizer>
+            <search mode="replace">
+                <condition attribute="code" operator="equal"/>
+                <condition attribute="name" operator="contains"/>
+            </search>
+            <result mode="append">
+                <listview mode="replace">
+                    <itemlayout>
+                        <attribute name="code" width="200"/>
+                        <attribute name="name" width="200"/>
+                    </itemlayout>
+                </listview>
+            </result>
+            <editor mode="append">
+                <tab name="properties" position="0">
+                    <section name="section.WorldpayAPMConfiguration">
+                        <listlayout>
+                            <attribute name="code" width="200" labelwidth="120" position="0"/>
+                            <attribute name="name" width="200" labelwidth="120" position="1"/>
+                            <attribute name="description" width="200" labelwidth="120" position="2"/>
+                            <attribute name="autoCancelPendingTimeoutInMinutes" width="200" labelwidth="120" position="3"/>
+                            <attribute name="countries" labelwidth="120" position="4">
+                                <referencecollectioneditor resortable="true" remove="true" create="false" add="true" autosave="true">
+                                    <itemlayout>
+                                        <attribute name="isoCode" width="100"/>
+                                        <attribute name="name" width="200"/>
+                                    </itemlayout>
+                                </referencecollectioneditor>
+                            </attribute>
+                            <attribute name="currencies" labelwidth="120" position="5">
+                                <referencecollectioneditor resortable="true" remove="true" create="false" add="true" autosave="true">
+                                    <itemlayout>
+                                        <attribute name="isoCode" width="100"/>
+                                        <attribute name="name" width="200"/>
+                                    </itemlayout>
+                                </referencecollectioneditor>
+                            </attribute>
+                            <attribute name="currencyRanges" labelwidth="120" position="6">
+                                <referencecollectioneditor resortable="true" remove="true" create="true" add="true" autosave="true">
+                                    <itemlayout>
+                                        <attribute name="currency" width="300"/>
+                                        <attribute name="min" width="200"/>
+                                        <attribute name="max" width="200"/>
+                                    </itemlayout>
+                                </referencecollectioneditor>
+                            </attribute>
+                        </listlayout>
+                    </section>
+                </tab>
+            </editor>
+        </organizer>
+        <defaultreference>
+            <itemlayout mode="replace">
+                <attribute name="name"/>
+            </itemlayout>
+        </defaultreference>
+    </type>
+
+    <type name="WorldpayBankConfiguration" mode="append">
+        <organizer>
+            <search mode="replace">
+                <condition attribute="code" operator="equal"/>
+                <condition attribute="name" operator="contains"/>
+                <condition attribute="active" operator="equal"/>
+            </search>
+            <result mode="append">
+                <listview mode="replace">
+                    <itemlayout>
+                        <attribute name="code" width="200"/>
+                        <attribute name="name" width="200"/>
+                        <attribute name="apm" width="200"/>
+                        <attribute name="active" width="200"/>
+                    </itemlayout>
+                </listview>
+            </result>
+            <editor mode="append">
+                <tab name="properties" position="0">
+                    <section name="section.WorldpayBankConfiguration">
+                        <listlayout>
+                            <attribute name="code" width="200" labelwidth="120" position="0"/>
+                            <attribute name="name" width="200" labelwidth="120" position="1"/>
+                            <attribute name="description" width="200" labelwidth="120" position="2"/>
+                            <attribute name="active" width="200" labelwidth="120" position="3"/>
+                            <attribute name="apm" width="200" labelwidth="120" position="4"/>
+                        </listlayout>
+                    </section>
+                </tab>
+            </editor>
+        </organizer>
+        <defaultreference>
+            <itemlayout mode="replace">
+                <attribute name="name"/>
+            </itemlayout>
+        </defaultreference>
+    </type>
+    <type name="AbstractOrder" mode="append">
+        <organizer>
+            <result mode="append">
+                <listview>
+                    <itemlayout>
+                        <attribute name="status" width="200"/>
+                    </itemlayout>
+                </listview>
+            </result>
+        </organizer>
+    </type>
+</configuration>

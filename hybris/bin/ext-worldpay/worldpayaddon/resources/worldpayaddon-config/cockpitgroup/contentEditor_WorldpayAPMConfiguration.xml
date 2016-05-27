@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="content-editor.xsd"
+                hideEmpty="false" hideReadOnly="false" groupCollections="false">
+    <template>
+        <![CDATA[
+		<table width="100%" style="margin: 0; padding: 0">
+			<tbody>
+				<tr>
+					<td colspan="2"><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMConfiguration.code"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMConfiguration.name"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMConfiguration.description"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMConfiguration.autoCancelPendingTimeoutInMinutes"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMConfiguration.countries"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMConfiguration.currencies"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td style="width:900px"><cockpit code="property" value="WorldpayAPMConfiguration.currencyRanges"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+			</tbody>
+		</table>
+	]]>
+    </template>
+    <custom-editors>
+    <property qualifier="WorldpayAPMConfiguration.currencyRanges" editorCode="default" >
+        	<parameter>
+                <name>allowCreate</name>
+                <value>true</value>
+            </parameter>
+        </property>
+       </custom-editors>
+</content-editor>

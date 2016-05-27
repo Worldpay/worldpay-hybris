@@ -1,0 +1,9 @@
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+$activateTriggers=$config-worldpayOrderSync.notification.received.trigger.activate
+
+INSERT_UPDATE OrderModificationCronJob;code[unique=true];job(code);sessionLanguage(isoCode)[default=en];typeOfPaymentTransactionToProcessSet(code)
+;orderModificationProcessorJob;orderModificationProcessorJobPerformable;;CAPTURE,AUTHORIZATION,CANCEL
+
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active[default=$activateTriggers];maxAcceptableDelay
+;orderModificationProcessorJob;0;1;-1;-1;-1;-1;true;;-1

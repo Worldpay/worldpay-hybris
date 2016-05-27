@@ -1,0 +1,62 @@
+.cms-payment-button {
+    margin-bottom: 10px;
+}
+
+.cms-payment-button > input[type=radio],
+.cms-payment-button > label span {
+    display: none;
+}
+
+.cms-payment-button > label.available-false {
+    display: none;
+}
+
+.cms-payment-button > label {
+    border: 1px solid transparent;
+    width: 65px;
+    height: 50px;
+    vertical-align:middle;
+    display: inline-flex;
+}
+
+.cms-payment-button label img {
+    pointer-events: none;
+    max-width:60px;
+    max-height:40px;
+    margin: auto;
+
+}
+
+.cms-payment-button > input[type="radio"]:checked + label {
+    background: #eee;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.cms-payment-button label:hover {
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.checkout-saved-card .security-headline {
+    font-weight: bold;
+    margin: -10px -20px 0 -20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-top: 1px solid #adaeb0;
+}
+
+.checkout-saved-card .security-form {
+    background: #f2f4f7;
+    padding: 0 20px 10px 20px;
+}
+
+.checkout-saved-card .security-form.dark {
+    background: #19212b;
+    color: #fff;
+}
+
+.form-control.security {
+    max-width: 50%;
+    height: 46px;
+}

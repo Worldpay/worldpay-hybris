@@ -1,0 +1,19 @@
+######
+## PARAMETERS REQUIRED FOR THIS SCRIPT
+##
+##   * contentCatalog   - content catalog id
+##   * addonExtensionName - extension name of the ui addon
+#######
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+# Language
+$lang=en
+
+#% if: !"responsive".equalsIgnoreCase(Config.getParameter("commerceservices.default.desktop.ui.experience"));
+
+# Content Pages
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+;;mobile-worldpayPaymentAndBillingCheckoutPage;"Payment powered by Worldpay"
+
+#% endif:

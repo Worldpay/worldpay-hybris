@@ -1,0 +1,25 @@
+$contentCatalog=apparel-deContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+#% if: !"responsive".equalsIgnoreCase(Config.getParameter("commerceservices.default.desktop.ui.experience"));
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;page
+# This update modifies the existing AccountOrderDetailsShippingComponent jspInclude component (with payment details in order history) by setting a new page existing in the worldpayaddon
+;;AccountOrderDetailsShippingComponent;Account Order Details Shipping Info Component;/WEB-INF/views/addons/worldpayaddon/desktop/pages/account/worldpayAccountOrderDetailShippingInfo.jsp
+;;MobileAccountOrderDetailsShippingComponent;Account Order Details Shipping Info Component;/WEB-INF/views/addons/worldpayaddon/mobile/pages/account/worldpayAccountOrderDetailShippingInfo.jsp
+
+# This update modifies the existing CheckoutComponent jspInclude component by setting a new page existing in the worldpayaddon
+;;CheckoutComponent;Checkout Display Component;/WEB-INF/views/addons/worldpayaddon/desktop/pages/cart/checkoutDisplay.jsp
+;;MobileCheckoutComponent;Mobile Checkout Component;/WEB-INF/views/addons/worldpayaddon/mobile/pages/cart/checkoutDisplay.jsp
+
+#% endif:
+
+#% if: "responsive".equalsIgnoreCase(Config.getParameter("commerceservices.default.desktop.ui.experience"));
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;page
+# This update modifies the existing AccountOrderDetailsShippingComponent jspInclude component (with payment details in order history) by setting a new page existing in the worldpayaddon
+;;AccountOrderDetailsShippingComponent;Account Order Details Shipping Info Component;/WEB-INF/views/addons/worldpayaddon/responsive/pages/account/worldpayAccountOrderDetailShippingInfo.jsp
+;;OrderConfirmationShippingComponent;Order Confirmation Shipping Info Component;/WEB-INF/views/addons/worldpayaddon/responsive/pages/account/worldpayAccountOrderDetailShippingInfo.jsp
+;;OrderConfirmationThankMessageComponent;Order Confirmation Thank You Message Component;/WEB-INF/views/addons/worldpayaddon/responsive/pages/checkout/worldpayCheckoutConfirmationThankMessage.jsp
+# This update modifies the existing CheckoutComponent jspInclude component by setting a new page existing in the worldpayaddon
+;;CheckoutComponent;Checkout Display Component;/WEB-INF/views/addons/worldpayaddon/responsive/pages/cart/checkoutDisplay.jsp
+
+#% endif:

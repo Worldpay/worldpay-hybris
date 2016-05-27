@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="sendVoidCommand" name="worldpay-void-process" processClass="com.worldpay.voidprocess.model.WorldpayVoidProcessModel">
+
+    <action id="sendVoidCommand" bean="worldpayCancelOrderAction">
+        <transition name="OK" to="end"/>
+        <transition name="NOK" to="waitForManualRetry"/>
+    </action>
+
+    <wait id="waitForManualRetry" then="sendVoidCommand">
+        <event>${process.code}_VOID_PAYMENT</event>
+    </wait>
+
+    <end id="end" state="SUCCEEDED">Success</end>
+
+</process>

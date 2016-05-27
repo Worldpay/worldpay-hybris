@@ -1,0 +1,9 @@
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+$activateTriggers=$config-worldpayOrderSync.notification.unprocessed.trigger.activate
+
+INSERT_UPDATE NotifyUnprocessedOrderModificationsCronJob;code[unique=true];job(code);sessionLanguage(isoCode)[default=en];unprocessedTimeInDays
+;notifyUnprocessedOrderModificationsCronJob;orderModificationUnprocessedModificationsNotifierJobPerformable;;7
+
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];cronExpression;relative;active[default=$activateTriggers];maxAcceptableDelay
+;notifyUnprocessedOrderModificationsCronJob;0 0 0 * * ?;true;;-1

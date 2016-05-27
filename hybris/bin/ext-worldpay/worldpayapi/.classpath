@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="hmc/src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="hmc/testsrc"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/platform"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commerceservices"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/acceleratorservices"/>
+	<classpathentry exported="true" kind="lib" path="lib/worldpay-core-1.12-SNAPSHOT.jar"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

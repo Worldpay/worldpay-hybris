@@ -1,0 +1,61 @@
+<div>
+    <table cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;" width="100%">
+        <tbody>
+        <tr>
+            <td class="structureViewSection" colspan="3">
+                <cockpit code="TopHeaderSlot"></cockpit>
+            </td>
+        </tr>
+        <tr>
+            <td class="structureViewSection" height="125px" rowspan="2" width="25%">
+                <cockpit code="SiteLogo"></cockpit>
+            </td>
+            <td class="structureViewSection">
+                <cockpit code="HeaderLinks">
+                    <cockpit code="SearchBox"></cockpit>
+                </cockpit>
+            </td>
+            <td class="structureViewSection" rowspan="2" width="15%">
+                <cockpit code="MiniCart"></cockpit>
+            </td>
+        </tr>
+        <tr>
+            <td class="structureViewSection" colspan="3">
+                <cockpit code="NavigationBar"></cockpit>
+            </td>
+        </tr>
+        <tr>
+            <td class="structureViewSection" colspan="3">
+                <cockpit code="BottomHeaderSlot"></cockpit>
+            </td>
+        </tr>
+        <tr>
+            <td class="structureViewSection" colspan="2" rowspan="1" height="75px" style="vertical-align:top;">
+                <cockpit code="PaymentButtons"></cockpit>
+            </td>
+            <td class="structureViewSection" colspan="1" rowspan="3" height="343px" style="vertical-align:top;" width="35%">
+                <div>Checkout Summary</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="structureViewSection" colspan="2" rowspan="1" style="vertical-align:top;">
+                <div>Billing Address</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="structureViewSection" colspan="3" height="100px" style="vertical-align:top;">
+                <cockpit code="SideContent"></cockpit>
+            </td>
+        </tr>
+        <tr>
+            <td class="structureViewSection" colspan="3" height="170px">
+                <cockpit code="Footer"></cockpit>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="cmsContentEditor" style="width:100%; border-top: 2px solid #bbb">
+        <cockpit code="editor"></cockpit>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="Yworldpayb2cdemo" managername="Yworldpayb2cdemoManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="yworldpayb2cdemo">
+
+        <requires-extension name="liveeditaddon"/>
+        <requires-extension name="worldpaysampledataaddon"/>
+
+        <coremodule generated="true" manager="com.worldpay.jalo.Yworldpayb2cdemoManager" packageroot="com.worldpay"/>
+
+        <meta key="modulegen-name" value="accelerator"/>
+
+    </extension>
+
+</extensioninfo>

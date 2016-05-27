@@ -1,0 +1,9 @@
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+$activateTriggers=$config-worldpayPaymentInfo.timeout.preparation.triggers.activate
+
+INSERT_UPDATE CronJob;code[unique=true];job(code);sessionLanguage(isocode)[default=en]
+;paymentInfoInquiryCronJob;paymentInfoInquiryJobPerformable;
+
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];cronExpression;relative;active[default=$activateTriggers];maxAcceptableDelay
+;paymentInfoInquiryCronJob;0 0/10 * * * ?;true;;-1

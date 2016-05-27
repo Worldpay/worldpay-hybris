@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view unassigned-group-name="Other">
+    <group name="General">
+        <property qualifier="PaymentTransactionEntry.paymentTransaction.requestToken" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.paymentTransaction.paymentProvider" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.time" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.type" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.pending" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.requestID" visible="true"/>
+
+        <custom class="de.hybris.platform.cscockpit.services.config.impl.PaymentTransactionEntryCurrencyAmountColumn" name="Amount" visible="true">
+            <label key="cscockpit.PaymentTransactionEntry.amount" />
+        </custom>
+
+        <property qualifier="PaymentTransactionEntry.transactionStatus" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.transactionStatusDetails" visible="true"/>
+
+        <property qualifier="PaymentTransactionEntry.aavResponse.aavAddressResultCode" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.aavResponse.aavCardholderNameResultCode" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.aavResponse.aavEmailResultCode" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.aavResponse.aavPostcodeResultCode" visible="true"/>
+        <property qualifier="PaymentTransactionEntry.aavResponse.aavTelephoneResultCode" visible="true"/>
+
+        <custom class="com.worldpay.cscockpit.configuration.PaymentTransactionRiskScoreColumn" name="Risk Score" visible="true">
+            <label key="worldpaycscockpit.PaymentTransactionRiskScore.riskScore" />
+        </custom>
+
+        <custom spring-bean="paymentInfoPaymentTypeColumn" name="Payment Method" visible="true">
+            <label key="worldpaycscockpit.PaymentInfoPaymentType.paymentType" />
+        </custom>
+
+    </group>
+</list-view>

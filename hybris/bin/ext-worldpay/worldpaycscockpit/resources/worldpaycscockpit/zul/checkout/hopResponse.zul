@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?page title="Payment Response" ?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+	<div visible="false" use="de.hybris.platform.cockpit.components.CustomCsaIncludeHelper"/>
+
+	<window border="none" use="com.worldpay.components.impl.HopResponseWindow" shadow="false">
+ 	</window>
+
+</zk>

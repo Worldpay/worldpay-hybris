@@ -1,0 +1,44 @@
+apply plugin: 'maven'
+apply plugin: 'groovy'
+apply plugin: 'e2y.worldpay'
+
+aws {
+    region = "eu-west-1"
+    accessKey = "AKIAIO3EWR34F2X4PGBA"
+    secretKey = "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"
+    privateKey = "/home/jenkins/.ssh/e2y-ec2.pem"
+    baseImage = 'ami-c230b8b1'
+    keyName = 'e2y-ec2'
+    instanceType = 't2.large'
+    securityGroup = 'sg-13acfc77'
+    publicHostedZoneId = 'Z1ICIPIHY007AA'
+    privateHostedZoneId = 'ZO9GP7EFS7O3F'
+    domain = 'aws.e2y.co.uk'
+}
+
+deploy {
+    hybrisVersion = '6.0.0.0'
+    libs = ['mysql:mysql-connector-java:5.1.33': 'hybris/bin/platform/lib/dbdriver/']
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        ivy {
+            url "http://artifactory.aws.e2y.co.uk/artifactory/plugins-local"
+            credentials {
+                username = "ypay-publisher"
+                password = "AP4RR3bAa8GEMH7CkA9iRHst7za"
+            }
+            layout 'pattern', {
+                m2compatible = true
+                artifact "[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+                ivy "[organization]/[module]/ivy-[revision].xml"
+            }
+        }
+        dependencies {
+            classpath 'co.uk.e2y.aws:yBuild:0.5.+'
+        }
+    }
+}
+

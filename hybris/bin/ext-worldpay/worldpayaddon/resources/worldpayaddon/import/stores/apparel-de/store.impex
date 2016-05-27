@@ -1,0 +1,19 @@
+$productCatalog=apparelProductCatalog
+$currencies=EUR
+$net=false
+$storeUid=apparel-de
+$defaultCurrency=EUR
+$languages=de
+$defaultLanguage=de
+
+$worldpayCheckoutGroup=worldpayB2CCheckoutGroup
+$worldpayResponsiveCheckoutGroup=worldpayB2CResponsiveCheckoutGroup
+
+# Base Store
+UPDATE BaseStore;uid[unique=true];checkoutFlowGroup
+;$storeUid;$worldpayCheckoutGroup
+
+#% if: "responsive".equalsIgnoreCase(Config.getParameter("commerceservices.default.desktop.ui.experience"));
+UPDATE BaseStore;uid[unique=true];checkoutFlowGroup
+;$storeUid;$worldpayResponsiveCheckoutGroup
+#% endif:

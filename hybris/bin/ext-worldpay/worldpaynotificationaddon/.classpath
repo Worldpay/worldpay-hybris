@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry kind="src" path="acceleratoraddon/web/src"/>
+	<classpathentry kind="src" path="hmc/src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="acceleratoraddon/web/testsrc"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/worldpayapi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/acceleratorstorefrontcommons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/addonsupport"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/payment"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ticketsystem"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/hmc"/>
+	<classpathentry kind="lib" path="lib/gson-2.6.2.jar"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>
