@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="checkOrder" name="order-process" processClass="de.hybris.platform.orderprocessing.model.OrderProcessModel">
+
+	<!-- Since worldpay process paymentTransactions asynchronously, it is necessary to add wait-steps to the order process -->
+	<action id="checkOrder" bean="checkOrderAction">
+		<transition name="OK" to="checkAuthorizeOrderPayment"/>
+		<transition name="NOK" to="error"/>
+	</action>
+
+	<!-- New transition WAIT to wait for authorisation from worldpay -->
+	<action id="checkAuthorizeOrderPayment" bean="checkAuthorizeOrderPaymentAction">
+		<transition name="OK" to="reserveAmount"/>
+		<transition name="NOK" to="authorizationFailedNotification"/>
+		<transition name="WAIT" to="waitFor_AUTHORIZATION"/>
+	</action>
+
+	<!-- New WAIT to be kicked off by worldpay when transaction is authorized by worldpay -->
+	<wait id="waitFor_AUTHORIZATION" then="checkAuthorizeOrderPayment" prependProcessCode="false">
+		<event>${process.code}_AUTHORIZATION</event>
+	</wait>
+
+	<action id="reserveAmount" bean="reserveOrderAmountAction">
+		<transition name="OK" to="checkTransactionReviewStatus"/>
+		<transition name="NOK" to="sendPaymentFailedNotification"/>
+	</action>
+
+	<action id="checkTransactionReviewStatus" bean="checkTransactionReviewStatusAction">
+		<transition name="OK" to="fraudCheck"/>
+		<transition name="NOK" to="notifyCustomer"/>
+		<transition name="WAIT" to="waitForReviewDecision"/>
+	</action>
+
+	<wait id="waitForReviewDecision" then="checkTransactionReviewStatus" prependProcessCode="false">
+  		<event>${process.order.code}_ReviewDecision</event>
+	</wait>
+
+	<!-- This action is managed by worldpayFraudCheckOrderInternalAction -->
+	<action id="fraudCheck" bean="fraudCheckOrderInternalAction">
+		<transition name="OK" to="sendOrderPlacedNotification"/>
+		<transition name="POTENTIAL" to="manualOrderCheckCSA" />
+	</action>
+	
+	<action id="manualOrderCheckCSA" bean="prepareOrderForManualCheckAction">
+		<transition name="OK" to="waitForManualOrderCheckCSA"/>
+	</action>
+
+	<wait id="waitForManualOrderCheckCSA" then="orderManualChecked" prependProcessCode="false">
+		<event>${process.code}_CSAOrderVerified</event>
+	</wait>
+	
+	<action id="orderManualChecked" bean="orderManualCheckedAction">
+		<transition name="OK" to="sendOrderPlacedNotification"/>
+		<transition name="NOK" to="waitForCleanUp"/>
+		<transition name="UNDEFINED" to="waitForManualOrderCheckCSA"/>
+	</action>
+
+	<action id="notifyCustomer" bean="notifyCustomerAboutFraudAction">
+		<transition name="OK" to="waitForCleanUp"/>
+	</action>
+	
+	<wait id="waitForCleanUp" then="scheduleForCleanUp" prependProcessCode="false">
+		<event>${process.code}_CleanUpEvent</event>
+	</wait>
+	
+	<action id="scheduleForCleanUp" bean="scheduleForCleanUpAction">
+		<transition name="OK" to="cancelOrder"/>
+		<transition name="NOK" to="orderManualChecked" /> 
+	</action>
+
+	<action id="sendOrderPlacedNotification" bean="sendOrderPlacedNotificationAction">
+		<transition name="OK" to="takePayment"/>
+	</action>
+	
+	<!-- New transition WAIT to wait for capture from worldpay -->
+	<action id="takePayment" bean="takePaymentAction">
+		<transition name="OK" to="splitOrder"/>
+		<transition name="NOK" to="sendPaymentFailedNotification"/>
+		<transition name="WAIT" to="waitFor_CAPTURE"/>
+	</action>
+
+	<!-- New WAIT to be kicked off by worldpay when transaction is captured by worldpay -->
+	<wait id="waitFor_CAPTURE" then="takePayment" prependProcessCode="false">
+		<event>${process.code}_CAPTURE</event>
+	</wait>
+
+	<action id="cancelOrder" bean="cancelWholeOrderAuthorizationAction">
+		<transition name="OK" to="failed"/>
+	</action>
+
+	<action id="authorizationFailedNotification" bean="sendAuthorizationFailedNotificationAction">
+		<transition name="OK" to="failed"/>
+	</action>
+
+	<action id="sendPaymentFailedNotification" bean="sendPaymentFailedNotificationAction">
+		<transition name="OK" to="failed"/>
+	</action>
+
+	<action id="splitOrder" bean="splitOrderAction">
+		<transition name="OK" to="waitForWarehouseSubprocessEnd"/>
+	</action>
+
+	<wait id="waitForWarehouseSubprocessEnd" then="isProcessCompleted" prependProcessCode="false" >
+		<event>${process.code}_ConsignmentSubprocessEnd</event>
+	</wait>
+
+	<action id="isProcessCompleted" bean="subprocessesCompletedAction">
+		<transition name="OK" to="sendOrderCompletedNotification"/>
+		<transition name="NOK" to="waitForWarehouseSubprocessEnd"/>
+	</action>
+
+	<action id="sendOrderCompletedNotification" bean="sendOrderCompletedNotificationAction">
+		<transition name="OK" to="success"/>
+	</action>
+
+	<end id="error" state="ERROR">All went wrong.</end>
+	<end id="failed" state="FAILED">Order not placed.</end>
+	<end id="success" state="SUCCEEDED">Order placed.</end>
+
+</process>

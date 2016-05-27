@@ -1,0 +1,98 @@
+apply plugin: 'installer-platform-plugin'
+
+def localProps = {
+    customConfig 'local.properties'
+    property 'googleApiKey', ''
+    property 'website.powertools.http', 'http://powertools.local:9001/yb2bacceleratorstorefront'
+    property 'website.powertools.https', 'https://powertools.local:9002/yb2bacceleratorstorefront'
+}
+
+def ext = {
+    scanPathWithAutoLoad '${HYBRIS_BIN_DIR}/ext-worldpay'
+    scanPathWithAutoLoad '${HYBRIS_BIN_DIR}/ext-worldpayfulfilment'
+
+    extName 'mcc'
+    extName 'backoffice'
+    extName 'commercesearchbackoffice'
+    extName 'b2bcommercebackoffice'
+    extName 'commerceservicesbackoffice'
+    extName 'solrfacetsearchbackoffice'
+    extName 'b2badmincockpit'
+
+    extName 'yacceleratorcockpits'
+    extName 'yacceleratorinitialdata'
+    extName 'yacceleratorfulfilmentprocess'
+    extName 'yaddon'
+    extName 'ycommercewebservices'
+
+    extName 'powertoolsstore'
+    extName 'solrserver'
+
+    extName 'acceleratorwebservicesaddon'
+    extName 'b2bacceleratoraddon'
+    extName 'commerceorgaddon'
+
+    extName 'customersupportbackoffice'
+
+    extName 'rulebuilderbackoffice'
+    extName 'promotionenginebackoffice'
+    extName 'droolsruleengineservices'
+    extName 'promotionenginesamplesaddon'
+
+}
+
+def config = {
+    localProperties localProps
+    extensions ext
+}
+
+task setup << {
+    apply plugin: 'installer-addon-plugin'
+
+    def pl = platform(config)
+    pl.setup()
+
+    pl.executeAntTarget 'extgen -Dinput.template=yacceleratorstorefront -Dinput.name=yb2bacceleratorstorefront -Dinput.package=de.hybris.platform.yb2bacceleratorstorefront'
+
+    pl.extensions {
+        extName 'yb2bacceleratorstorefront'
+    }
+    pl.setup()
+
+    pl.project.addons {
+        names "worldpayaddon,worldpaynotificationaddon,worldpaysampledataaddon"
+        template "yb2bacceleratorstorefront"
+        storeFronts "yb2bacceleratorstorefront"
+        platform pl
+    }
+
+    pl.project.addons {
+        names "b2bacceleratoraddon,commerceorgaddon,promotionenginesamplesaddon"
+        template "yacceleratorstorefront"
+        storeFronts "yb2bacceleratorstorefront"
+        platform pl
+    }
+
+    pl.project.addons {
+        names "acceleratorwebservicesaddon"
+        template "ycommercewebservices"
+        storeFronts "ycommercewebservices"
+        platform pl
+    }
+}
+
+task build << {
+    def pl = platform(config)
+    pl.build()
+}
+
+task initialize << {
+    def pl = platform(config)
+    pl.build()
+    pl.initialize()
+}
+
+task start << {
+    def pl = platform(config)
+    pl.start()
+}

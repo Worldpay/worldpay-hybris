@@ -1,0 +1,26 @@
+{
+  "environment": {
+    "name": "sprintly",
+
+    "storefronts": {
+      "electronicsContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "creditCardComponentMobile,payPalComponentMobile,boletoComponentMobile,postepayComponentMobile,poliComponentMobile,polinzComponentMobile,mistercashComponentMobile,nordeaComponentMobile,chinaUnionPayComponentMobile,alipayComponentMobile,enetsComponentMobile,idealComponentMobile",
+        "paymentPageTemplate": "WorldpayCSEPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-ukContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,idealComponent",
+        "mobileApmComponents": "creditCardComponentMobile,payPalComponentMobile,boletoComponentMobile,postepayComponentMobile,poliComponentMobile,polinzComponentMobile,mistercashComponentMobile,nordeaComponentMobile,idealComponentMobile",
+        "paymentPageTemplate": "WorldpayPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobilePaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-deContentCatalog": {
+        "apmComponents": "creditCardComponent,sofortComponent,payPalComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,idealComponent",
+        "mobileApmComponents": "creditCardComponentMobile,sofortComponentMobile,payPalComponentMobile,boletoComponentMobile,postepayComponentMobile,poliComponentMobile,polinzComponentMobile,mistercashComponentMobile,nordeaComponentMobile,idealComponentMobile",
+        "paymentPageTemplate": "WorldpayPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobilePaymentAndBillingCheckoutPageTemplate"
+      }
+    }
+  }
+}

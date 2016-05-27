@@ -1,0 +1,59 @@
+$contentCatalog=electronicsContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCms=jar:com.worldpay.constants.WorldpaysampledataaddonConstants&/worldpaysampledataaddon/import/cockpits/cmscockpit
+
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$siteResource=jar:com.worldpay.constants.WorldpaysampledataaddonConstants&/worldpaysampledataaddon/import/images/desktop
+$picture=media(code, $contentCV);
+$lang=en
+
+# Create medias
+INSERT_UPDATE Media;code[unique=true];$media;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)
+;alipay-icon;$siteResource/alipay-icon.png;;;images
+;cc-icon;$siteResource/cc-icon.png;;;images
+;cup-icon;$siteResource/cup-icon.png;;;images
+;enets-icon;$siteResource/enets-icon.jpg;;;images
+;paypal-icon;$siteResource/paypal-icon.png;;;images
+;boleto-icon;$siteResource/boleto-icon.png;;;images
+;postepay-icon;$siteResource/postepay-icon.png;;;images
+;poli-icon;$siteResource/poli-icon.png;;;images
+;polinz-icon;$siteResource/polinz-icon.png;;;images
+;mistercash-icon;$siteResource/mistercash-icon.png;;;images
+;nordea-icon;$siteResource/nordea-icon.png;;;images
+;ideal-icon;$siteResource/ideal-icon.png;;;images
+
+INSERT_UPDATE WorldpayCCComponent;uid[unique=true];$contentCV[unique=true];name;$picture[lang=$lang]
+;creditCardComponent;;"Credit Card";cc-icon
+
+INSERT_UPDATE WorldpayAPMComponent;uid[unique=true];$contentCV[unique=true];name;apmConfiguration(code);$picture[lang=$lang]
+;payPalComponent;;"PayPal";PAYPAL-EXPRESS;paypal-icon
+;boletoComponent;;"Boleto";BOLETO-SSL;boleto-icon
+;postepayComponent;;"PostePay";POSTEPAY-SSL;postepay-icon
+;poliComponent;;"POLi";POLI-SSL;poli-icon
+;polinzComponent;;"POLi - NZ";POLINZ-SSL;polinz-icon
+;mistercashComponent;;"Mistercash";MISTERCASH-SSL;mistercash-icon
+;nordeaComponent;;"Nordea";BANKLINKNORDEA-SSL;nordea-icon
+;chinaUnionPayComponent;;"China Union Pay";CHINAUNIONPAY-SSL;cup-icon
+;alipayComponent;;"Alipay";ALIPAY-SSL;alipay-icon
+;enetsComponent;;"Enets";ENETS-SSL;enets-icon
+;idealComponent;;"iDeal";IDEAL-SSL;ideal-icon
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;WorldpayPaymentButtonsSlot;creditCardComponent,payPalComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,idealComponent
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang];
+;;WorldpayHelpParagraphComponent;"<strong>Need Help setting up your Merchants?</strong> <span>Contact Your Worldpay Relationship Manager and they will only be too happy to help!</span>";
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV);;;
+;;SideContent-WorldpayPaymentAndBillingCheckoutPage;Put content here;true;WorldpayHelpParagraphComponent;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;Side-WorldpayPaymentAndBillingCheckoutPage;SideContent;worldpayPaymentAndBillingCheckoutPage;SideContent-WorldpayPaymentAndBillingCheckoutPage
+
+#CMSCockpit Preview Image for WorldpayPaymentAndBillingCheckoutPage
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;$media[forceWrite=true]
+;;worldpayPaymentAndBillingCheckoutPagePreview;text/png;WorldpayPaymentAndBillingElectronics.png;$jarResourceCms/preview-images/electronics/WorldpayPaymentAndBillingElectronics.png
+
+# Preview for WorldpayPaymentAndBillingCheckoutPage
+UPDATE WorldpayPaymentPage;$contentCV[unique=true];uid[unique=true];previewImage(code,$contentCV);masterTemplate(uid,$contentCV)
+;;worldpayPaymentAndBillingCheckoutPage;worldpayPaymentAndBillingCheckoutPagePreview;WorldpayCSEPaymentAndBillingCheckoutPageTemplate

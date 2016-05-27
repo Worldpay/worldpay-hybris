@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="defaultWorldpayCheckoutService" class="com.worldpay.core.checkout.DefaultWorldpayCheckoutService">
+        <property name="modelService" ref="modelService"/>
+    </bean>
+
+    <alias alias="commercePaymentAuthorizationStrategy" name="worldpayCommercePaymentAuthorizationStrategy"/>
+    <bean id="worldpayCommercePaymentAuthorizationStrategy" parent="defaultPaymentAuthorizationStrategy">
+        <property name="generateMerchantTransactionCodeStrategy" ref="worldpayGenerateMerchantTransactionCodeStrategy"/>
+    </bean>
+
+    <alias name="defaultWorldpayPaymentCheckoutFacade" alias="worldpayPaymentCheckoutFacade"/>
+    <bean id="defaultWorldpayPaymentCheckoutFacade" class="com.worldpay.facades.order.impl.DefaultWorldpayPaymentCheckoutFacade">
+        <property name="checkoutFacade" ref="checkoutFacade"/>
+        <property name="cartService" ref="cartService"/>
+        <property name="deliveryService" ref="deliveryService"/>
+        <property name="worldpayCheckoutService" ref="defaultWorldpayCheckoutService"/>
+    </bean>
+
+    <bean id="worldpayCheckoutFacade" class="com.worldpay.facades.order.impl.WorldpayCheckoutFacadeDecorator">
+        <property name="checkoutFlowFacade" ref="checkoutFlowFacade"/>
+        <property name="cartService" ref="cartService"/>
+        <property name="addressConverter" ref="addressConverter"/>
+    </bean>
+
+    <alias name="defaultWorldpayDirectOrderFacade" alias="worldpayDirectOrderFacade"/>
+    <bean id="defaultWorldpayDirectOrderFacade" class="com.worldpay.facades.payment.direct.impl.DefaultWorldpayDirectOrderFacade">
+        <property name="worldpayDirectOrderService" ref="worldpayDirectOrderService"/>
+        <property name="cartService" ref="cartService"/>
+        <property name="uiExperienceService" ref="uiExperienceService"/>
+        <property name="worldpayMerchantInfoService" ref="worldpayMerchantInfoService"/>
+        <property name="acceleratorCheckoutFacade" ref="acceleratorCheckoutFacade"/>
+        <property name="worldpayAuthenticatedShopperIdStrategy" ref="worldpayAuthenticatedShopperIdStrategy"/>
+    </bean>
+
+    <alias name="defaultWorldpayBankConfigurationFacade" alias="worldpayBankConfigurationFacade"/>
+    <bean id="defaultWorldpayBankConfigurationFacade" class="com.worldpay.facades.impl.DefaultWorldpayBankConfigurationFacade">
+        <property name="worldpayBankConfigurationLookupService" ref="worldpayBankConfigurationLookupService"/>
+        <property name="bankConfigurationModelBankConfigurationDataConverter" ref="bankConfigurationModelBankConfigurationDataConverter"/>
+        <property name="apmConfigurationLookupService" ref="apmConfigurationLookupService"/>
+    </bean>
+
+    <alias name="defaultWorldpayAdditionalInfoFacade" alias="worldpayAdditionalInfoFacade"/>
+    <bean id="defaultWorldpayAdditionalInfoFacade" class="com.worldpay.facades.payment.impl.DefaultWorldpayAdditionalInfoFacade">
+        <property name="worldpayAdditionalInfoService" ref="worldpayAdditionalInfoService"/>
+    </bean>
+
+    <!-- Converters and populators -->
+    <alias name="defaultBankConfigurationModelBankConfigurationDataConverter" alias="bankConfigurationModelBankConfigurationDataConverter"/>
+    <bean id="defaultBankConfigurationModelBankConfigurationDataConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="com.worldpay.facades.BankConfigurationData"/>
+        <property name="populators">
+            <list>
+                <ref bean="bankConfigurationPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias name="defaultBankConfigurationPopulator" alias="bankConfigurationPopulator"/>
+    <bean id="defaultBankConfigurationPopulator" class="com.worldpay.converters.populators.WorldpayBankConfigurationPopulator"/>
+
+    <bean id="worldpayOrderDataPopulator" class="com.worldpay.facades.order.converters.populators.WorldpayOrderDataPopulator">
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+    </bean>
+
+    <bean id="worldpayEmailAddressPopulator" class="com.worldpay.facades.order.converters.populators.WorldpayEmailAddressPopulator"/>
+
+    <bean id="worldpayAPMPaymentInfoPopulator" class="com.worldpay.facades.order.converters.populators.WorldpayAPMPaymentInfoPopulator"/>
+
+    <alias name="defaultWorldpayHostedOrderFacade" alias="worldpayHostedOrderFacade"/>
+    <bean id="defaultWorldpayHostedOrderFacade" class="com.worldpay.facades.payment.hosted.impl.DefaultWorldpayHostedOrderFacade">
+        <property name="worldpayRedirectOrderService" ref="worldpayRedirectOrderService"/>
+        <property name="worldpayMerchantInfoService" ref="worldpayMerchantInfoService"/>
+        <property name="uiExperienceService" ref="uiExperienceService"/>
+        <property name="cartService" ref="cartService"/>
+        <property name="worldpayOrderInfoStrategy" ref="worldpayOrderInfoStrategy"/>
+        <property name="sessionService" ref="sessionService"/>
+        <property name="worldpayMerchantConfigDataFacade" ref="worldpayMerchantConfigDataFacade"/>
+    </bean>
+
+    <alias name="defaultAPMAvailabilityFacade" alias="apmAvailabilityFacade"/>
+    <bean id="defaultAPMAvailabilityFacade" class="com.worldpay.facades.impl.DefaultAPMAvailabilityFacade">
+        <property name="apmAvailabilityService" ref="apmAvailabilityService"/>
+        <property name="cartService" ref="cartService"/>
+    </bean>
+
+    <!--Fix issue with template cms content scripts not running-->
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="selectedContentCatalogImpexMacroParametersPopulators"/>
+        <property name="add" ref="supportedUiExperienceImpexMacroParameterPopulator"/>
+    </bean>
+
+    <bean id="worldpayaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+        <property name="supportedChannels">
+            <list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+                <value>B2C</value>
+                <value>B2B</value>
+            </list>
+        </property>
+        <property name="addonExtensionMetadata">
+            <bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+                <property name="suffixChannel" value="false"/>
+                <property name="baseExtensionName" value="worldpayaddon"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="worldpayaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener">
+        <property name="extensionName" value="worldpayaddon"/>
+    </bean>
+
+    <!-- The defaultUserFacade uses directly the AddressReversePopulator -->
+    <alias name="worldpayAddressEmailReversePopulator" alias="addressReversePopulator"/>
+    <bean id="worldpayAddressEmailReversePopulator" class="com.worldpay.facades.order.converters.populators.WorldpayAddressEmailReversePopulator" parent="defaultAddressReversePopulator"/>
+
+    <bean name="worldpayAbstractOrderPopulator" class="com.worldpay.order.converters.populator.WorldpayAbstractOrderPopulator">
+        <property name="addressConverter" ref="addressConverter"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="cartConverter"/>
+        <property name="add" ref="worldpayAPMPaymentInfoPopulator"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="cartConverter"/>
+        <property name="add" ref="worldpayAbstractOrderPopulator"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="orderConverter"/>
+        <property name="add" ref="worldpayAbstractOrderPopulator"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="orderConverter"/>
+        <property name="add" ref="worldpayOrderDataPopulator"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="orderConverter"/>
+        <property name="add" ref="worldpayAPMPaymentInfoPopulator"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="extendedCartConverter"/>
+        <property name="add" ref="worldpayAbstractOrderPopulator"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="extendedCartConverter"/>
+        <property name="add" ref="worldpayAPMPaymentInfoPopulator"/>
+    </bean>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="addressConverter"/>
+        <property name="add" ref="worldpayEmailAddressPopulator"/>
+    </bean>
+
+    <bean id="worldpayAcceleratorStatusDisplayMapMergeDirective" depends-on="acceleratorStatusDisplayMap" parent="mapMergeDirective">
+        <property name="key" value="APM_OPEN"/>
+        <property name="value" value="pending"/>
+    </bean>
+
+    <alias name="worldpayDynamicAttributesOrderStatusDisplayByMap" alias="dynamicAttributesOrderStatusDisplay"/>
+    <bean id="worldpayDynamicAttributesOrderStatusDisplayByMap" class="com.worldpay.core.checkout.attribute.WorldpayOrderStatusDisplayDynamicAttributeHandler" parent="acceleratorDynamicAttributesOrderStatusDisplayByMap">
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+    </bean>
+</beans>

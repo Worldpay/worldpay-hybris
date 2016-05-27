@@ -1,0 +1,48 @@
+.cms-payment-button{
+    margin-bottom: 10px;
+}
+
+.cms-payment-button input[type=radio]{
+    display:none;
+}
+
+.cms-payment-button .ui-btn-text > span {
+    display:inline-block;
+    padding-left:5px;
+    line-height: 40px;
+    vertical-align: top;
+}
+
+.cms-payment-button label.ui-btn .ui-btn-inner{
+    padding-left:5px;
+}
+
+.cms-payment-button label.ui-btn .ui-btn-inner img{
+    max-width:70px;
+    max-height:48px;
+    margin: auto;
+}
+
+.cms-payment-button .ui-btn-inner .ui-icon{
+    display:none;
+}
+
+.cms-payment-button label.available-false{
+    display: none;
+}
+
+.cms-payment-button label {
+    border: 1px solid transparent;
+    vertical-align:middle;
+    display: block;
+}
+
+.cms-payment-button input[type="radio"]:checked + label {
+    background: #eee;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.errorBorder {
+    border-color: #c60300;
+}

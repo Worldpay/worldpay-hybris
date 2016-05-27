@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<config xmlns="http://www.hybris.com/cockpit/config"
+        xmlns:explorer-tree="http://www.hybris.com/cockpitng/config/explorertree"
+        xmlns:list-view="http://www.hybris.com/cockpitng/component/listView"
+        xmlns:y="http://www.hybris.com/cockpit/config/hybris"
+        xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea">
+
+    <context component="explorer-tree" merge-by="module">
+        <explorer-tree:explorer-tree>
+            <explorer-tree:navigation-node id="Worldpay">
+                <explorer-tree:type-node code="WorldpayAPMConfiguration" id="worldpay.apm.configuration"/>
+                <explorer-tree:type-node code="WorldpayBankConfiguration" id="worldpay.bank.configuration"/>
+                <explorer-tree:type-node code="WorldpayOrderModification" id="worldpay.order.modifications"/>
+                <explorer-tree:navigation-node id="CronJobs">
+                    <explorer-tree:type-node code="OrderModificationCronJob" id="worldpay.cronjob.orderModification"/>
+                    <explorer-tree:type-node code="NotifyUnprocessedOrderModificationsCronJob" id="worldpay.cronjob.unprocessedordermodification"/>
+                    <explorer-tree:type-node code="CleanUpProcessedOrderModificationsCronJob" id="worldpay.cronjob.cleanupprocessedordermodifications"/>
+                </explorer-tree:navigation-node>
+            </explorer-tree:navigation-node>
+        </explorer-tree:explorer-tree>
+    </context>
+
+    <context type="WorldpayAPMPaymentInfo" component="listview">
+        <list-view:list-view>
+            <list-view:column qualifier="worldpayOrderCode"/>
+            <list-view:column qualifier="apmConfiguration.name"/>
+        </list-view:list-view>
+    </context>
+
+    <context merge-by="type" parent="GenericItem" type="WorldpayAPMConfiguration" component="listview">
+        <list-view:list-view>
+            <list-view:column qualifier="code"/>
+            <list-view:column qualifier="name"/>
+        </list-view:list-view>
+    </context>
+
+    <context merge-by="type" parent="GenericItem" type="WorldpayBankConfiguration" component="listview">
+        <list-view:list-view>
+            <list-view:column qualifier="code"/>
+            <list-view:column qualifier="name"/>
+            <list-view:column qualifier="apm"/>
+            <list-view:column qualifier="active"/>
+        </list-view:list-view>
+    </context>
+
+    <context type="WorldpayAPMPaymentInfo" component="base">
+        <y:base>
+            <y:labels>
+                <y:label>apmConfiguration.name</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="WorldpayAPMConfiguration" component="base" merge-by="type" parent="GenericItem">
+        <y:base>
+            <y:labels>
+                <y:label>name</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="PaymentTransactionEntry" component="base" merge-by="type" parent="GenericItem">
+        <y:base>
+            <y:labels>
+                <y:label>type + ' ' + amount</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="WorldpayCurrencyRange" component="base" merge-by="type" parent="GenericItem">
+        <y:base>
+            <y:labels>
+                <y:label>currency.isocode + (min != null ? ' &gt;= ' + min : '') + (max != null ? ' &lt;= ' + max : '')</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="WorldpayAPMConfiguration" component="editor-area" merge-by="type" parent="GenericItem">
+        <editorArea:editorArea name="" xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea">
+            <editorArea:essentials xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea">
+                <editorArea:essentialSection name="hmc.essential">
+                    <editorArea:attribute qualifier="code"/>
+                    <editorArea:attribute qualifier="description"/>
+                    <editorArea:attribute qualifier="name"/>
+                    <editorArea:attribute qualifier="bank"/>
+                    <editorArea:attribute qualifier="countries"/>
+                    <editorArea:attribute qualifier="currencyRanges"/>
+                    <editorArea:attribute qualifier="currencies"/>
+                    <editorArea:attribute qualifier="autoCancelPendingTimeoutInMinutes"/>
+                    <editorArea:attribute qualifier="automaticRefunds"/>
+                    <editorArea:attribute qualifier="bankTransferRefunds"/>
+                </editorArea:essentialSection>
+            </editorArea:essentials>
+        </editorArea:editorArea>
+    </context>
+</config>

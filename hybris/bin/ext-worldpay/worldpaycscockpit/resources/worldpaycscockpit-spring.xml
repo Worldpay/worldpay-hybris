@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="worldpaycscockpitLabelLocator" class="de.hybris.platform.cockpit.util.ConfigurableCockpitLabelLocator" lazy-init="false">
+        <property name="resourceFolder" value="/worldpaycscockpit/cockpit/localization/"/>
+    </bean>
+
+    <alias name="defaultCsWorldpayRedirectOrderService" alias="csWorldpayRedirectOrderService"/>
+    <bean id="defaultCsWorldpayRedirectOrderService"
+          class="com.worldpay.service.payment.impl.DefaultWorldpayRedirectOrderService"
+          parent="abstractWorldpayOrderService">
+        <property name="sessionService" ref="sessionService"/>
+        <property name="worldpayURIService" ref="worldpayURIService"/>
+        <property name="worldpayUrlService" ref="csWorldpayUrlService"/>
+        <property name="worldpayAuthenticatedShopperIdStrategy" ref="worldpayAuthenticatedShopperIdStrategy"/>
+        <property name="worldpayTokenEventReferenceCreationStrategy" ref="worldpayTokenEventReferenceCreationStrategy"/>
+        <property name="worldpayDeliveryAddressStrategy" ref="worldpayDeliveryAddressStrategy"/>
+    </bean>
+
+    <alias name="defaultCsWorldpayUrlService" alias="csWorldpayUrlService"/>
+    <bean id="defaultCsWorldpayUrlService" class="com.worldpay.service.impl.DefaultCsWorldpayUrlService"
+          parent="abstractWorldpayUrlService">
+        <property name="successPath" value="/worldpaycscockpit/checkout/hopResponse.zul"/>
+        <property name="pendingPath" value="/worldpaycscockpit/checkout/hopResponse.zul"/>
+        <property name="failurePath" value="/worldpaycscockpit/checkout/hopResponse.zul"/>
+        <property name="cancelPath" value="/worldpaycscockpit/checkout/hopCancel.zul"/>
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <alias name="defaultCsWorldpayCheckoutService" alias="csCheckoutService"/>
+    <bean id="defaultCsWorldpayCheckoutService" class="com.worldpay.cscockpit.checkout.service.DefaultCsWorldpayCheckoutService" parent="defaultCsCheckoutService"/>
+
+    <bean id="paymentInfoPaymentTypeColumn" class="com.worldpay.cscockpit.configuration.PaymentInfoPaymentTypeColumn">
+        <property name="apmConfigurationLookupService" ref="apmConfigurationLookupService"/>
+    </bean>
+
+</beans>

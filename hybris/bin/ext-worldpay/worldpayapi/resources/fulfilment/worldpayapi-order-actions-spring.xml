@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="worldpayAbstractFraudCheckAction" class="com.worldpay.fulfilmentprocess.actions.order.WorldpayAbstractFraudCheckAction" abstract="true" parent="worldpayAbstractOrderAction"/>
+
+    <!-- Order process actions -->
+    <alias name="worldpayCheckAuthorizeOrderPaymentAction" alias="checkAuthorizeOrderPaymentAction"/>
+    <bean id="worldpayCheckAuthorizeOrderPaymentAction" class="com.worldpay.fulfilmentprocess.actions.order.WorldpayCheckAuthorizeOrderPaymentAction" parent="abstractAction">
+        <property name="paymentTransactionService" ref="worldpayPaymentTransactionService"/>
+    </bean>
+
+    <bean id="worldpayAbstractOrderAction" class="com.worldpay.fulfilmentprocess.actions.order.WorldpayAbstractOrderAction" abstract="true" parent="abstractAction">
+        <property name="timeService" ref="timeService"/>
+    </bean>
+
+    <alias name="worldpayTakepaymentAction" alias="takePaymentAction"/>
+    <bean id="worldpayTakepaymentAction" class="com.worldpay.fulfilmentprocess.actions.order.WorldpayTakePaymentAction" parent="abstractAction">
+        <property name="paymentService" ref="paymentService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+    </bean>
+
+    <alias name="worldpayFraudCheckOrderInternalAction" alias="fraudCheckOrderInternalAction"/>
+    <bean id="worldpayFraudCheckOrderInternalAction" class="com.worldpay.fulfilmentprocess.actions.order.WorldpayFraudCheckOrderInternalAction" parent="worldpayAbstractFraudCheckAction">
+        <property name="fraudService" ref="fraudService"/>
+        <property name="providerName" value="worldpay"/>
+    </bean>
+
+    <alias name="worldpayOrderManualCheckedAction" alias="orderManualCheckedAction"/>
+    <bean id="worldpayOrderManualCheckedAction" class="com.worldpay.fulfilmentprocess.actions.order.WorldpayOrderManualCheckedAction" parent="worldpayAbstractOrderAction" />
+
+</beans>

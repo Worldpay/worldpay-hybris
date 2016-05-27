@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-elements>	
+
+	<content-element type="WorldpayCCComponent" name="type.worldpaycccomponent.name"
+							description="type.worldpaycccomponent.description"
+							image="cmscockpit/images/worldpay_icon_34x34.png"
+							refImage="cmscockpit/images/worldpay_icon_34x34.png"
+							imageSmall="cmscockpit/images/worldpay_icon_20x20.png"/>
+							
+							
+</content-elements>	

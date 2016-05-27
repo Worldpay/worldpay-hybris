@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <collectiontypes>
+        <collectiontype code="apmConfigurationCountriesSet" elementtype="Country" type="set"/>
+        <collectiontype code="apmConfigurationCurrenciesSet" elementtype="Currency" type="set"/>
+        <collectiontype code="apmConfigurationCurrencyRangesSet" elementtype="WorldpayCurrencyRange" type="set"/>
+    </collectiontypes>
+    <enumtypes>
+        <enumtype code="OrderStatus" autocreate="false" generate="true" dynamic="true">
+            <value code="PAYMENT_PENDING"/>
+        </enumtype>
+        <enumtype code="PaymentTransactionType" autocreate="false" generate="false">
+            <value code="SETTLED" />
+        </enumtype>
+    </enumtypes>
+
+    <itemtypes>
+        <itemtype code="WorldpayCurrencyRange" autocreate="true" generate="true" jaloclass="com.worldpay.jalo.WorldpayCurrencyRange">
+            <deployment table="WorldpayCurrencyRange" typecode="19021"/>
+            <attributes>
+                <attribute qualifier="currency" type="Currency">
+                    <persistence type="property"/>
+                    <modifiers initial="true" read="true" write="true" search="true" optional="false"/>
+                    <description>Contains the currency code</description>
+                </attribute>
+                <attribute qualifier="min" type="java.lang.Double">
+                    <persistence type="property"/>
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <description>Contains the minimum allowed amount</description>
+                </attribute>
+                <attribute qualifier="max" type="java.lang.Double">
+                    <persistence type="property"/>
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <description>Contains the maximum allowed amount</description>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="currencyIdx">
+                    <key attribute="currency"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="PaymentInfo" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="worldpayOrderCode" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Contains the Worldpay order code</description>
+                </attribute>
+                <attribute qualifier="isApm" type="java.lang.Boolean">
+                    <persistence type="dynamic" attributeHandler="worldpayPaymentInfoIsApmHandler"/>
+                    <modifiers write="false" read="true" search="true" optional="false"/>
+                </attribute>
+                <attribute qualifier="paymentType" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="paymentAmount" autocreate="true" type="java.lang.Double">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="paymentCurrency" autocreate="true" type="Currency">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <!-- Token related information -->
+                <attribute qualifier="authenticatedShopperID" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="eventReference" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="expiryDate" autocreate="true" type="java.util.Date">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="worldpayOrderCodeIdx">
+                    <key attribute="worldpayOrderCode"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="WorldpayAPMPaymentInfo"
+                  extends="PaymentInfo"
+                  jaloclass="de.hybris.platform.jalo.order.payment.PaymentInfo"
+                  autocreate="true"
+                  generate="false">
+            <attributes>
+                <attribute qualifier="apmConfiguration" autocreate="true" type="WorldpayAPMConfiguration">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="timeoutDate" autocreate="true" type="java.util.Date">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="PaymentTransaction" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="apmOpen" type="java.lang.Boolean">
+                    <persistence type="property"/>
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <description>Determines if the transaction is Open</description>
+                    <defaultvalue>Boolean.FALSE</defaultvalue>
+                </attribute>
+                <attribute qualifier="riskScore" autocreate="true" type="WorldpayRiskScore">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="requestIdIdx">
+                    <key attribute="requestId"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="WorldpayAavResponse"
+                  jaloclass="com.worldpay.jalo.WorldpayAavResponse"
+                  autocreate="true"
+                  generate="true">
+            <deployment table="WorldpayAavResponse" typecode="19022"/>
+            <attributes>
+                <attribute qualifier="code" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true" unique="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="aavAddressResultCode" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="aavCardholderNameResultCode" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="aavEmailResultCode" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="aavPostcodeResultCode" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="aavTelephoneResultCode" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="code_unique_Idx" unique="true">
+                    <key attribute="code"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="WorldpayRiskScore"
+                  jaloclass="com.worldpay.jalo.WorldpayRiskScore"
+                  autocreate="true"
+                  generate="true">
+            <deployment table="WorldpayRiskScore" typecode="19019"/>
+            <attributes>
+                <attribute qualifier="code" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true" unique="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="value" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="provider" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="id" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="finalScore" autocreate="true" type="java.lang.Double">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="rgid" autocreate="true" type="java.lang.Long">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="tScore" autocreate="true" type="java.lang.Double">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="tRisk" autocreate="true" type="java.lang.Double">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="message" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="extendedResponse" autocreate="true" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property">
+                        <columntype database="oracle">
+                            <value>CLOB</value>
+                        </columntype>
+                        <columntype database="sqlserver">
+                            <value>nvarchar(max)</value>
+                        </columntype>
+                        <columntype database="mysql">
+                            <value>text</value>
+                        </columntype>
+                        <columntype>
+                            <value>varchar(4000)</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="rgIdIdx">
+                    <key attribute="rgid"/>
+                </index>
+                <index name="idIdx">
+                    <key attribute="id"/>
+                </index>
+                <index name="code_unique_Idx" unique="true">
+                    <key attribute="code"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="PaymentTransactionEntry" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="pending" type="java.lang.Boolean">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Determines if the transaction has been confirmed by Worldpay</description>
+                    <defaultvalue>Boolean.TRUE</defaultvalue>
+                </attribute>
+                <attribute qualifier="aavResponse" autocreate="true" type="WorldpayAavResponse">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="ReturnRequest" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="paymentTransactionEntry" autocreate="true" type="PaymentTransactionEntry">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="paymentTx_unique_Idx" unique="true">
+                    <key attribute="paymentTransactionEntry"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="WorldpayAPMConfiguration" autocreate="true" generate="true" jaloclass="com.worldpay.jalo.WorldpayAPMConfiguration">
+            <deployment table="WorldpayAPMConfiguration" typecode="19020"/>
+            <attributes>
+                <attribute qualifier="code" type="java.lang.String">
+                    <modifiers initial="true" unique="true" write="true" search="true" read="true" optional="false"/>
+                    <persistence type="property"/>
+                    <description>Contains the code of the APM</description>
+                </attribute>
+                <attribute qualifier="name" type="localized:java.lang.String">
+                    <modifiers write="true" search="true" read="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Contains the name of the APM</description>
+                </attribute>
+                <attribute qualifier="description" type="localized:java.lang.String">
+                    <modifiers write="true" search="false" read="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Contains the description of the APM</description>
+                </attribute>
+                <attribute qualifier="autoCancelPendingTimeoutInMinutes" type="java.lang.Integer">
+                    <modifiers write="true" search="false" read="true" optional="false"/>
+                    <defaultvalue>2880</defaultvalue>
+                    <persistence type="property"/>
+                    <description>Timeout in minutes before the order is auto-cancelled</description>
+                </attribute>
+                <attribute qualifier="bank" type="java.lang.Boolean">
+                    <modifiers write="true" search="true" read="true" optional="false"/>
+                    <persistence type="property"/>
+                    <description>The APM is used for bank transfers</description>
+                    <defaultvalue>false</defaultvalue>
+                </attribute>
+                <attribute qualifier="countries" type="apmConfigurationCountriesSet">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Countries for which the APM is restricted to.</description>
+                </attribute>
+                <attribute qualifier="currencies" type="apmConfigurationCurrenciesSet">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Currencies for which the APM is restricted to.</description>
+                </attribute>
+                <attribute qualifier="currencyRanges" type="apmConfigurationCurrencyRangesSet">
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Currency ranges for which the APM is restricted to.</description>
+                </attribute>
+                <attribute qualifier="automaticRefunds" type="java.lang.Boolean">
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                    <description>The APM can be refunded automatically.</description>
+                </attribute>
+                <attribute qualifier="bankTransferRefunds" type="java.lang.Boolean">
+                    <modifiers read="true" write="true" search="true" optional="false" initial="true"/>
+                    <persistence type="property"/>
+                    <description>The APM can be refunded via a bank transfer.</description>
+                </attribute>
+            </attributes>
+            <indexes>
+                <index name="worldpayAPM_unique_IDX" unique="true">
+                    <key attribute="code"/>
+                </index>
+            </indexes>
+        </itemtype>
+
+        <itemtype code="WorldpayBankConfiguration" autocreate="true" generate="true" jaloclass="com.worldpay.jalo.WorldpayBankConfiguration">
+            <deployment table="WorldpayBankConfig" typecode="19023"/>
+            <attributes>
+                <attribute qualifier="code" type="java.lang.String">
+                    <modifiers write="true" search="true" read="true" optional="false"/>
+                    <persistence type="property"/>
+                    <description>Bank code</description>
+                </attribute>
+                <attribute qualifier="apm" type="WorldpayAPMConfiguration">
+                    <modifiers write="true" search="true" read="true" optional="false"/>
+                    <persistence type="property"/>
+                    <description>Bank APM</description>
+                </attribute>
+                <attribute qualifier="name" type="localized:java.lang.String">
+                    <modifiers write="true" search="true" read="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Bank name</description>
+                </attribute>
+                <attribute qualifier="description" type="localized:java.lang.String">
+                    <modifiers write="true" search="false" read="true" optional="true"/>
+                    <persistence type="property"/>
+                    <description>Bank description</description>
+                </attribute>
+                <attribute qualifier="active" type="java.lang.Boolean">
+                    <modifiers optional="false"/>
+                    <persistence type="property"/>
+                    <defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+                    <description>Defines if the bank is active or not</description>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <typegroup name="cms">
+            <itemtype code="WorldpayPaymentPage" jaloclass="com.worldpay.jalo.WorldpayPaymentPage"
+                      autocreate="true" generate="true" extends="ContentPage">
+                <attributes>
+                    <attribute qualifier="lightboxMaskOpacity" type="java.lang.Integer">
+                        <modifiers optional="false"/>
+                        <persistence type="property"/>
+                        <defaultvalue>java.lang.Integer.valueOf(80)</defaultvalue>
+                    </attribute>
+                    <attribute qualifier="lightboxMaskColor" type="java.lang.String">
+                        <modifiers optional="false"/>
+                        <persistence type="property"/>
+                        <defaultvalue>"#000023"</defaultvalue>
+                    </attribute>
+                    <attribute qualifier="accessibility" type="boolean">
+                        <modifiers optional="false"/>
+                        <persistence type="property"/>
+                        <defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+                    </attribute>
+                    <attribute qualifier="debug" type="boolean">
+                        <modifiers optional="false"/>
+                        <persistence type="property"/>
+                        <defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+                    </attribute>
+                </attributes>
+            </itemtype>
+        </typegroup>
+    </itemtypes>
+
+</items>

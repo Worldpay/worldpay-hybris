@@ -1,0 +1,11 @@
+######
+## PARAMETERS REQUIRED FOR THIS SCRIPT
+##
+##   * storeUid - id of the store
+#######
+
+$paymentProvider=Worldpay
+
+# Base Store
+UPDATE BaseStore;uid[unique=true];paymentProvider
+;$storeUid;$paymentProvider

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="resources"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/worldpaynotificationaddon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commerceservices"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/platform"/>
+	<classpathentry kind="lib" path="lib/mockserver-core-3.10.4.jar"/>
+	<classpathentry kind="lib" path="lib/mockserver-integration-testing-3.10.4.jar"/>
+	<classpathentry kind="lib" path="lib/mockserver-netty-3.10.4.jar"/>
+	<classpathentry kind="lib" path="lib/netty-all-4.0.34.Final.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="lib/mockserver-client-java-3.10.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commercefacades"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

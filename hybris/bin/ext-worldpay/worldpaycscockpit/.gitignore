@@ -1,0 +1,5 @@
+
+web/webroot/_ui
+web/webroot/cscockpit
+web/webroot/cockpit
+web/webroot/WEB-INF/**/addons

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+    <enum class="com.worldpay.payment.TransactionStatus">
+        <value>REFUSED</value>
+        <value>AUTHORISED</value>
+        <value>ERROR</value>
+        <value>CANCELLED</value>
+        <value>AUTHENTICATION_REQUIRED</value>
+    </enum>
+
+    <bean class="de.hybris.platform.commercefacades.order.data.CartData">
+        <property name="merchantCode" type="String"/>
+    </bean>
+
+    <bean class="de.hybris.platform.commercefacades.order.data.OrderData">
+        <property name="isApmOpen" type="java.lang.Boolean"/>
+    </bean>
+
+    <bean class="com.worldpay.facades.order.data.WorldpayAPMPaymentInfoData">
+        <property name="name" type="String"/>
+    </bean>
+
+    <bean class="de.hybris.platform.commercefacades.order.data.AbstractOrderData">
+        <property name="worldpayOrderCode" type="java.lang.String"/>
+        <property name="worldpayAPMPaymentInfo" type="com.worldpay.facades.order.data.WorldpayAPMPaymentInfoData"/>
+        <property name="worldpayDeclineCode" type="java.lang.Integer"/>
+    </bean>
+
+    <bean class="com.worldpay.payment.DirectResponseData">
+        <property name="orderData" type="de.hybris.platform.commercefacades.order.data.OrderData"/>
+        <property name="transactionStatus" type="com.worldpay.payment.TransactionStatus"/>
+        <property name="returnCode" type="java.lang.Integer"/>
+        <property name="issuerURL" type="java.lang.String"/>
+        <property name="paRequest" type="java.lang.String"/>
+    </bean>
+
+    <bean class="com.worldpay.facades.BankConfigurationData">
+        <property name="bankCode" type="java.lang.String"/>
+        <property name="bankName" type="java.lang.String"/>
+    </bean>
+</beans>

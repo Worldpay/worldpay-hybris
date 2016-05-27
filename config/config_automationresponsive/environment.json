@@ -1,0 +1,26 @@
+{
+  "environment": {
+    "name": "automationresponsive",
+
+    "storefronts": {
+      "electronicsContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayCSEPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-ukContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayIframePaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-deContentCatalog": {
+        "apmComponents": "creditCardComponent,sofortComponent,payPalComponent,boletoComponent,postepayComponent,poliComponent,polinzComponent,mistercashComponent,nordeaComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate"
+      }
+    }
+  }
+}

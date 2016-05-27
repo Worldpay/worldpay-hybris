@@ -1,0 +1,16 @@
+######
+## PARAMETERS REQUIRED FOR THIS SCRIPT
+##
+##   * contentCatalog   - content catalog id
+##   * addonExtensionName - extension name of the ui addon
+#######
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCmsCockpit=jar:com.worldpay.constants.WorldpaysampledataaddonConstants&/worldpaysampledataaddon/import/cockpit/cmscockpit
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$fromemailaddress=$config-mail.from
+
+UPDATE EmailPage[batchmode=true];$contentCV[unique=true];fromEmail
+;;$fromemailaddress

@@ -1,0 +1,50 @@
+# Activate free shipping
+INSERT_UPDATE ZoneDeliveryMode; code[unique = true]; active[default = true]; name[lang = 'en']; description[lang = 'en'] ; net
+; free-standard-shipping ;; Free shipping ; Free shipping - for testing purposes ; false
+
+
+# Create delivery costs
+INSERT_UPDATE ZoneDeliveryModeValue; deliveryMode(code)[unique = true]; zone(code)[unique = true]; currency(isocode)[unique = true]; value; minimum[unique = true]
+; free-standard-shipping ; continentalEurope ; GBP ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; continentalEurope ; JPY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; continentalEurope ; USD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; continentalEurope ; EUR ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; continentalEurope ; SGD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; continentalEurope ; CNY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; ca                ; GBP ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; ca                ; JPY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; ca                ; USD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; ca                ; EUR ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; ca                ; SGD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; ca                ; CNY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; china             ; GBP ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; china             ; JPY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; china             ; USD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; china             ; EUR ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; china             ; SGD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; china             ; CNY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; japan             ; GBP ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; japan             ; JPY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; japan             ; USD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; japan             ; EUR ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; japan             ; SGD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; japan             ; CNY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; singapore         ; GBP ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; singapore         ; JPY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; singapore         ; USD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; singapore         ; EUR ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; singapore         ; SGD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; singapore         ; CNY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; uk                ; GBP ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; uk                ; JPY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; uk                ; USD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; uk                ; EUR ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; uk                ; SGD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; uk                ; CNY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; usa               ; GBP ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; usa               ; JPY ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; usa               ; USD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; usa               ; EUR ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; usa               ; SGD ; 0, 00 ; 0, 00 ;
+; free-standard-shipping ; usa               ; CNY ; 0, 00 ; 0, 00 ;
+

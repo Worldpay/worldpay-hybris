@@ -1,0 +1,78 @@
+<html>
+
+    <meta http-equiv="Pragma" content="no-cache">
+    <!--
+    This page is on the same domain as the parent, so can
+    communicate with it to order the iframe window resizing
+    to fit the content
+    -->
+    <body onload="selectAction()">
+        <script>
+            // Tell the parent iframe what height the iframe needs to be
+            function selectAction() {
+
+                var action = getParam('action');
+
+                switch(action){
+                    case 'resize':
+                        resize();
+                        break;
+                    case 'redirect':
+                        redirect();
+                        break;
+                    case 'scroll':
+                        scroll();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // Tell the parent iframe to redirect to a url
+            function redirect() {
+
+                var url = getParam('url'),
+                id = getParam('iframeIntegrationId');
+
+                // This works as our parent's parent is on our domain
+                var obj = parent.parent.window[id];
+                obj.redirect(url);
+            }
+
+            // Tell the parent iframe to scroll to the top of the page
+            function scroll(){
+
+                var id = getParam('iframeIntegrationId');
+
+                // This works as our parent's parent is on our domain
+                var obj = parent.parent.window[id];
+                obj.scroll();
+            }
+
+            // Tell the parent iframe what height the iframe needs to be
+            function resize(){
+
+                var height = getParam('height'),
+                id = getParam('iframeIntegrationId');
+
+                // This works as our parent's parent is on our domain..
+                var obj = parent.parent.window[id];
+                obj.resize(height);
+            }
+
+            // Helper function, parse param from request string
+            function getParam(name) {
+
+                name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+                var regexS = "[\\?&]"+name+"=([^&#]*)";
+                var regex = new RegExp( regexS );
+                var results = regex.exec( window.location.href );
+
+                if( results == null )
+                    return "";
+                else
+                    return results[1];
+            }
+        </script>
+    </body>
+</html>

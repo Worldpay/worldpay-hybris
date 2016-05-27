@@ -1,0 +1,80 @@
+apply plugin: 'installer-platform-plugin'
+
+def localProps = {
+    customConfig 'local.properties'
+    property 'googleApiKey', ''
+}
+
+def ext = {
+    scanPathWithAutoLoad '${HYBRIS_BIN_DIR}/ext-worldpay'
+    scanPathWithAutoLoad '${HYBRIS_BIN_DIR}/ext-worldpayfulfilment'
+
+    extName 'mcc'
+    extName 'backoffice'
+    extName 'commercesearchbackoffice'
+    extName 'commerceservicesbackoffice'
+    extName 'solrfacetsearchbackoffice'
+    extName 'solrserver'
+    extName 'yacceleratorcockpits'
+    extName 'yacceleratorinitialdata'
+    extName 'yacceleratorfulfilmentprocess'
+    extName 'yacceleratorstorefront'
+    extName 'yaddon'
+    extName 'ycommercewebservices'
+
+    extName 'electronicsstore'
+    extName 'apparelstore'
+
+    extName 'liveeditaddon'
+    extName 'acceleratorwebservicesaddon'
+
+    extName 'customersupportbackoffice'
+
+    extName 'rulebuilderbackoffice'
+    extName 'promotionenginebackoffice'
+    extName 'droolsruleengineservices'
+    extName 'promotionenginesamplesaddon'
+
+}
+
+def config = {
+    localProperties localProps
+    extensions ext
+}
+
+task setup << {
+    apply plugin: 'installer-addon-plugin'
+
+    def pl = platform(config)
+    pl.setup()
+
+    pl.project.addons {
+        names "worldpayaddon,worldpaynotificationaddon,worldpaysampledataaddon,liveeditaddon,promotionenginesamplesaddon"
+        template "yacceleratorstorefront"
+        storeFronts "yacceleratorstorefront"
+        platform pl
+    }
+
+    pl.project.addons {
+        names "acceleratorwebservicesaddon"
+        template "ycommercewebservices"
+        storeFronts "ycommercewebservices"
+        platform pl
+    }
+}
+
+task build << {
+    def pl = platform(config)
+    pl.build()
+}
+
+task initialize << {
+    def pl = platform(config)
+    pl.build()
+    pl.initialize()
+}
+
+task start << {
+    def pl = platform(config)
+    pl.start()
+}

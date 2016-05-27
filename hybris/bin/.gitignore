@@ -1,0 +1,15 @@
+**/bin
+**/gensrc/
+**/platformhome.properties
+**/*classes/
+**/eclipsebin/
+**/build.xml
+**/*.build.number
+**/beans.xsd
+**/items.xsd
+**/hmc.xsd
+**/extensioninfo.xsd
+**/resources/*/*-*testclasses.xml
+
+**/web/addonsrc
+**/web/commonwebsrc

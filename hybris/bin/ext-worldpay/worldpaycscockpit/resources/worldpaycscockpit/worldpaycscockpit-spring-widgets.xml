@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+       default-autowire="byName">
+
+    <!-- WIDGETS -->
+
+    <alias alias="csCardPaymentWidgetRenderer" name="defaultWorldpayCsCardPaymentWidgetRenderer"/>
+    <bean id="defaultWorldpayCsCardPaymentWidgetRenderer" scope="prototype"
+          class="com.worldpay.widgets.renderers.impl.WorldpayCardPaymentWidgetRenderer"
+          parent="defaultCsCardPaymentWidgetRenderer">
+        <property name="debugMode" value="#{configurationService.configuration.getBoolean('hop.debug.mode', false)}"/>
+    </bean>
+
+    <alias alias="csCheckoutPaymentWidgetRenderer" name="defaultWorldpayCsCheckoutPaymentWidgetRenderer"/>
+    <bean id="defaultWorldpayCsCheckoutPaymentWidgetRenderer" scope="prototype"
+          class="com.worldpay.widgets.renderers.impl.WorldpayCheckoutPaymentWidgetRenderer"
+          parent="defaultCsCheckoutPaymentWidgetRenderer">
+        <property name="worldpayAuthenticatedShopperIdStrategy" ref="worldpayAuthenticatedShopperIdStrategy"/>
+    </bean>
+
+
+    <alias name="defaultHopResponse" alias="hopResponse"/>
+    <bean id="defaultHopResponse" class="com.worldpay.components.impl.HopResponse" scope="prototype">
+        <property name="worldpayRedirectOrderService" ref="csWorldpayRedirectOrderService"/>
+        <property name="worldpayMerchantInfoService" ref="worldpayMerchantInfoService"/>
+        <property name="searchCommandController" ref="csCartSearchController"/>
+        <property name="redirectAuthoriseResultConverter" ref="redirectAuthoriseResultConverter"/>
+    </bean>
+
+    <!-- CONTROLLERS -->
+
+    <alias alias="csCartSearchController" name="defaultCsCartSearchController"/>
+    <bean id="defaultCsCartSearchController" parent="csBaseDefaultSearchController">
+        <property name="searchService" ref="csCartSearchService"/>
+    </bean>
+
+    <!-- Order fraud controller -->
+    <alias alias="csOrderFraudController" name="worldpayCsOrderFraudController"/>
+    <bean id="worldpayCsOrderFraudController" scope="session" parent="defaultCsOrderFraudController">
+        <property name="processName" value="order-process"/>
+    </bean>
+
+    <!-- checkout controller -->
+    <alias alias="csCheckoutCardPaymentController" name="defaultWorldpayCsCheckoutController"/>
+    <alias alias="csCheckoutController" name="defaultWorldpayCsCheckoutController"/>
+    <bean id="defaultWorldpayCsCheckoutController" class="com.worldpay.widgets.controllers.impl.DefaultWorldpayCheckoutController" scope="session"
+          parent="defaultCsCheckoutController">
+        <property name="worldpayRedirectOrderService" ref="csWorldpayRedirectOrderService"/>
+        <property name="worldpayMerchantConfigDataFacade" ref="worldpayMerchantConfigDataFacade"/>
+        <property name="worldpayOrderInfoStrategy" ref="worldpayOrderInfoStrategy"/>
+    </bean>
+
+    <alias alias="csOrderPaymentTransactionsWidgetRenderer" name="worldpayCsOrderPaymentTransactionsWidgetRenderer"/>
+    <bean id="worldpayCsOrderPaymentTransactionsWidgetRenderer" parent="defaultCsOrderPaymentTransactionsWidgetRenderer" class="de.hybris.platform.cscockpit.widgets.renderers.impl.ConfigurableCsMasterDetailListboxWidgetRenderer">
+        <property name="detailRenderer">
+            <bean class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.OrderPaymentTransactionEntryDetailRenderer" parent="abstractWidgetDetailRenderer">
+                <property name="configurationCode" value="worldpay_paymentTransactionListDetail"/>
+                <property name="paymentInfoRenderer">
+                    <bean class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.ConfigurableItemWidgetDetailRenderer" parent="abstractWidgetDetailRenderer">
+                        <property name="configurationCode" value="paymentInfo"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <alias alias="csCartPaymentTransactionsWidgetRenderer" name="worldpayCsCartPaymentTransactionsWidgetRenderer"/>
+    <bean id="worldpayCsCartPaymentTransactionsWidgetRenderer" parent="defaultCsCartPaymentTransactionsWidgetRenderer" class="de.hybris.platform.cscockpit.widgets.renderers.impl.ConfigurableCsMasterDetailListboxWidgetRenderer">
+        <property name="detailRenderer">
+            <bean class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.OrderPaymentTransactionEntryDetailRenderer" parent="abstractWidgetDetailRenderer">
+                <property name="configurationCode" value="worldpay_paymentTransactionListDetail"/>
+                <property name="paymentInfoRenderer">
+                    <bean class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.ConfigurableItemWidgetDetailRenderer" parent="abstractWidgetDetailRenderer">
+                        <property name="configurationCode" value="paymentInfo"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <alias name="worldpayCsOrderManagementActionsWidgetController" alias="csOrderManagementActionsWidgetController" />
+    <bean id="worldpayCsOrderManagementActionsWidgetController" parent="defaultCsOrderManagementActionsWidgetController" class="com.worldpay.widgets.controllers.WorldpayOrderManagementActionsWidgetController" scope="session"/>
+
+</beans>
+	

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+	        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Strategies -->
+    <alias name="worldpayOrderModificationProcessStrategy" alias="orderModificationProcessStrategy"/>
+    <bean id="worldpayOrderModificationProcessStrategy" class="com.worldpay.strategies.impl.DefaultWorldpayOrderModificationProcessStrategy">
+        <property name="modelService" ref="modelService"/>
+        <property name="businessProcessService" ref="businessProcessService"/>
+        <property name="orderModificationDao" ref="orderModificationDao"/>
+        <property name="processDefinitionDao" ref="processDefinitionDao"/>
+        <property name="orderNotificationService" ref="orderNotificationService"/>
+        <property name="orderModificationSerialiser" ref="orderModificationSerialiser"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="nonTriggeringOrderStatuses" ref="nonBusinessProcessTriggeringOrderStatuses"/>
+        <property name="worldpayAuthenticatedShopperIdStrategy" ref="worldpayAuthenticatedShopperIdStrategy"/>
+        <property name="worldpayOrderModificationRefundProcessStrategy" ref="worldpayOrderModificationRefundProcessStrategy"/>
+    </bean>
+
+    <alias name="defaultWorldpayOrderModificationRefundProcessStrategy" alias="worldpayOrderModificationRefundProcessStrategy"/>
+    <bean id="defaultWorldpayOrderModificationRefundProcessStrategy" class="com.worldpay.strategies.impl.DefaultWorldpayOrderModificationRefundProcessStrategy"/>
+
+    <alias name="worldpayOrderModificationCleanUpStrategy" alias="orderModificationCleanUpStrategy"/>
+    <bean id="worldpayOrderModificationCleanUpStrategy" class="com.worldpay.strategies.impl.DefaultWorldpayOrderModificationCleanUpStrategy">
+        <property name="orderModificationDao" ref="orderModificationDao"/>
+        <property name="modelService" ref="modelService"/>
+    </bean>
+
+    <alias name="orderModificationNotifierStrategy" alias="orderModificationNotifierStrategy"/>
+    <bean id="orderModificationNotifierStrategy" class="com.worldpay.strategies.impl.DefaultWorldpayOrderModificationNotifierStrategy">
+        <property name="ticketBusinessService" ref="ticketBusinessService"/>
+        <property name="modelService" ref="modelService"/>
+        <property name="orderModificationDao" ref="orderModificationDao"/>
+        <property name="l10nService" ref="l10nService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+    </bean>
+
+    <alias name="defaultPaymentTransactionRejectionStrategy" alias="paymentTransactionRejectionStrategy"/>
+    <bean id="defaultPaymentTransactionRejectionStrategy" class="com.worldpay.strategies.impl.DefaultPaymentTransactionRejectionStrategy">
+        <property name="modelService" ref="modelService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="processDefinitionDao" ref="processDefinitionDao"/>
+        <property name="businessProcessService" ref="businessProcessService"/>
+    </bean>
+
+    <bean id="worldpaynotificationaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+        <property name="supportedChannels">
+            <list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+                <value>B2C</value>
+            </list>
+        </property>
+        <property name="addonExtensionMetadata">
+            <bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+                <property name="suffixChannel" value="false"/>
+                <property name="baseExtensionName" value="worldpaynotificationaddon"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="worldpaynotificationaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener">
+        <property name="extensionName" value="worldpaynotificationaddon"/>
+    </bean>
+
+    <bean id="orderModificationListener" class="com.worldpay.worldpaynotificationaddon.listener.WorldpayOrderModificationListener" parent="abstractEventListener">
+        <property name="modelService" ref="modelService"/>
+        <property name="paymentTransactionTypeMap" ref="paymentTransactionTypeMap"/>
+        <property name="orderModificationSerialiser" ref="orderModificationSerialiser"/>
+        <property name="worldpayCartService" ref="worldpayCartService"/>
+    </bean>
+
+    <bean id="orderModificationProcessorJobPerformable" class="com.worldpay.cronjob.OrderModificationProcessorJobPerformable" parent="abstractJobPerformable">
+        <property name="worldpayOrderModificationProcessStrategy" ref="orderModificationProcessStrategy"/>
+    </bean>
+    <bean id="orderModificationUnprocessedModificationsNotifierJobPerformable" class="com.worldpay.cronjob.OrderModificationNotifierJobPerformable" parent="abstractJobPerformable">
+        <property name="worldpayOrderModificationNotifierStrategy" ref="orderModificationNotifierStrategy"/>
+    </bean>
+    <bean id="cleanUpProcessedOrderModificationsJobPerformable" class="com.worldpay.cronjob.OrderModificationCleanUpJobPerformable" parent="abstractJobPerformable">
+        <property name="worldpayOrderModificationCleanUpStrategy" ref="orderModificationCleanUpStrategy"/>
+    </bean>
+    <bean id="paymentInfoInquiryJobPerformable" class="com.worldpay.cronjob.PaymentInfoInquiryJobPerformable" parent="abstractJobPerformable">
+        <property name="orderInquiryService" ref="orderInquiryService"/>
+        <property name="worldpayPaymentTransactionDao" ref="paymentTransactionDao"/>
+        <property name="worldpayMerchantInfoService" ref="worldpayMerchantInfoService"/>
+        <property name="configurationService" ref="configurationService"/>
+        <property name="paymentTransactionRejectionStrategy" ref="paymentTransactionRejectionStrategy"/>
+    </bean>
+
+    <bean id="apmOrderTimeoutJobPerformable" class="com.worldpay.cronjob.APMOrderTimeoutJobPerformable" parent="abstractJobPerformable">
+        <property name="worldpayPaymentTransactionDao" ref="paymentTransactionDao"/>
+        <property name="businessProcessService" ref="businessProcessService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="transactionTemplate">
+            <bean class="org.springframework.transaction.support.TransactionTemplate">
+                <property name="transactionManager" ref="txManager"/>
+            </bean>
+        </property>
+    </bean>
+
+    <util:set id="nonBusinessProcessTriggeringOrderStatuses" value-type="de.hybris.platform.core.enums.OrderStatus">
+        <value>CANCELLED</value>
+        <value>CANCELLING</value>
+    </util:set>
+
+    <alias name="defaultOrderModificationDao" alias="orderModificationDao"/>
+    <bean id="defaultOrderModificationDao" class="com.worldpay.dao.impl.DefaultOrderModificationDao" parent="abstractItemDao"/>
+
+    <alias name="defaultProcessDefinitionDao" alias="processDefinitionDao"/>
+    <bean id="defaultProcessDefinitionDao" class="com.worldpay.dao.impl.DefaultProcessDefinitionDao" parent="abstractItemDao"/>
+
+    <alias name="defaultOrderModificationSerialiser" alias="orderModificationSerialiser"/>
+    <bean id="defaultOrderModificationSerialiser" class="com.worldpay.util.impl.DefaultOrderModificationSerialiser"/>
+
+    <!-- Order Notification Service -->
+    <alias alias="orderNotificationService" name="defaultOrderNotificationService"/>
+    <bean id="defaultOrderNotificationService" class="com.worldpay.core.services.impl.DefaultOrderNotificationService">
+        <property name="worldpayPaymentTransactionDao" ref="paymentTransactionDao"/>
+        <property name="journalTypeToNotificationProcessorStrategyMap" ref="journalTypeToNotificationProcessorStrategyMap"/>
+    </bean>
+
+    <alias alias="authorisedOrderNotificationProcessorStrategy" name="defaultAuthorisedOrderNotificationProcessorStrategy"/>
+    <bean id="defaultAuthorisedOrderNotificationProcessorStrategy" class="com.worldpay.notification.processors.impl.DefaultAuthorisedOrderNotificationProcessorStrategy">
+        <property name="modelService" ref="modelService"/>
+        <property name="worldpayPaymentInfoService" ref="worldpayPaymentInfoService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="transactionTemplate">
+            <bean class="org.springframework.transaction.support.TransactionTemplate">
+                <property name="transactionManager" ref="txManager"/>
+            </bean>
+        </property>
+    </bean>
+
+    <alias alias="capturedOrderNotificationProcessorStrategy" name="defaultCapturedOrderNotificationProcessorStrategy"/>
+    <bean id="defaultCapturedOrderNotificationProcessorStrategy" class="com.worldpay.notification.processors.impl.DefaultCapturedOrderNotificationProcessorStrategy">
+        <property name="modelService" ref="modelService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="transactionTemplate">
+            <bean class="org.springframework.transaction.support.TransactionTemplate">
+                <property name="transactionManager" ref="txManager"/>
+            </bean>
+        </property>
+    </bean>
+
+    <alias alias="refusedOrderNotificationProcessorStrategy" name="defaultRefusedOrderNotificationProcessorStrategy"/>
+    <bean id="defaultRefusedOrderNotificationProcessorStrategy" class="com.worldpay.notification.processors.impl.DefaultRefusedOrderNotificationProcessorStrategy">
+        <property name="worldpayPaymentInfoService" ref="worldpayPaymentInfoService"/>
+        <property name="transactionTemplate">
+            <bean class="org.springframework.transaction.support.TransactionTemplate">
+                <property name="transactionManager" ref="txManager"/>
+            </bean>
+        </property>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="modelService" ref="modelService"/>
+    </bean>
+
+    <util:map id="journalTypeToNotificationProcessorStrategyMap"
+              key-type="com.worldpay.service.model.AuthorisedStatus"
+              value-type="com.worldpay.notification.processors.OrderNotificationProcessorStrategy">
+        <entry key="AUTHORISED" value-ref="authorisedOrderNotificationProcessorStrategy"/>
+        <entry key="CAPTURED" value-ref="capturedOrderNotificationProcessorStrategy"/>
+        <entry key="REFUSED" value-ref="refusedOrderNotificationProcessorStrategy"/>
+    </util:map>
+
+    <alias name="defaultOrderInquiryService" alias="orderInquiryService"/>
+    <bean id="defaultOrderInquiryService" class="com.worldpay.core.services.impl.DefaultOrderInquiryService">
+        <property name="worldpayPaymentInfoService" ref="worldpayPaymentInfoService"/>
+        <property name="worldpayConfigLookupService" ref="worldpayConfigLookupService"/>
+    </bean>
+
+    <alias name="defaultWorldpayCronJobSupportInformationService" alias="worldpayCronJobSupportInformationService"/>
+    <bean id="defaultWorldpayCronJobSupportInformationService" class="com.worldpay.support.impl.DefaultWorldpayCronJobSupportInformationService">
+        <property name="flexibleSearchService" ref="flexibleSearchService"/>
+    </bean>
+
+    <bean id="orderModificationCodeGenerator" class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator">
+        <property name="key" value="worldpay_modification"/>
+        <property name="digits" value="10"/>
+        <property name="start" value="00000000"/>
+    </bean>
+
+    <bean id="worldpayOrderModificationPrepareInterceptor" class="com.worldpay.interceptors.WorldpayItemCodePrepareInterceptor">
+        <property name="keyGenerator" ref="orderModificationCodeGenerator"/>
+        <property name="typeService" ref="typeService"/>
+        <property name="fieldName" value="code"/>
+    </bean>
+
+    <bean id="worldpayOrderModificationInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="worldpayOrderModificationPrepareInterceptor"/>
+        <property name="typeCode" value="WorldpayOrderModification"/>
+    </bean>
+
+
+</beans>

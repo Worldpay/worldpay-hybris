@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <bean id="worldpayResponseBuilder" class="com.worldpay.worldpayresponsemock.responses.impl.DefaultWorldpayResponseBuilder"/>
+    <bean id="worldpayDirectAuthoriseResponseBuilder" class="com.worldpay.worldpayresponsemock.responses.impl.DefaultWorldpayDirectAuthoriseResponseBuilder"/>
+    <bean id="worldpayCaptureResponseBuilder" class="com.worldpay.worldpayresponsemock.responses.impl.DefaultWorldpayCaptureResponseBuilder"/>
+    <bean id="worldpayNotificationResponseBuilder" class="com.worldpay.worldpayresponsemock.responses.impl.DefaultWorldpayNotificationResponseBuilder"/>
+    <bean id="worldpayTokenCreateResponseBuilder" class="com.worldpay.worldpayresponsemock.responses.impl.DefaultWorldpayTokenCreateResponseBuilder"/>
+
+    <bean id="worldpayRestTemplate" class="org.springframework.web.client.RestTemplate"/>
+
+    <bean id="worldpayMockConnector" class="com.worldpay.worldpayresponsemock.mock.WorldpayMockConnector">
+        <property name="worldpayRestTemplate" ref="worldpayRestTemplate"/>
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <bean id="worldpayMockFacade" class="com.worldpay.worldpayresponsemock.facades.impl.DefaultWorldpayMockFacade"/>
+
+    <bean id="worldpayResponseMockMerchantInfoService" class="com.worldpay.worldpayresponsemock.merchant.impl.DefaultWorldpayResponseMockMerchantInfoService" parent="worldpayMerchantInfoService"/>
+
+    <util:map id="ISO8583ResponseCodes" key-type="java.lang.Integer">
+        <entry key="0" value="AUTHORISED"/>
+        <entry key="2" value="REFERRED"/>
+        <entry key="3" value="INVALID ACCEPTOR"/>
+        <entry key="4" value="HOLD CARD"/>
+        <entry key="5" value="REFUSED"/>
+        <entry key="8" value="APPROVE AFTER IDENTIFICATION"/>
+        <entry key="12" value="INVALID TRANSACTION"/>
+        <entry key="13" value="INVALID AMOUNT"/>
+        <entry key="14" value="INVALID ACCOUNT"/>
+        <entry key="15" value="INVALID CARD ISSUER"/>
+        <entry key="17" value="ANNULATION BY CLIENT"/>
+        <entry key="19" value="REPEAT OF LAST TRANSACTION"/>
+        <entry key="20" value="ACQUIRER ERROR"/>
+        <entry key="21" value="REVERSAL NOT PROCESSED, MISSING AUTHORISATION"/>
+        <entry key="24" value="UPDATE OF FILE IMPOSSIBLE"/>
+        <entry key="25" value="REFERENCE NUMBER CANNOT BE FOUND"/>
+        <entry key="26" value="DUPLICATE REFERENCE NUMBER"/>
+        <entry key="27" value="ERROR IN REFERENCE NUMBER FIELD"/>
+        <entry key="28" value="ACCESS DENIED"/>
+        <entry key="29" value="IMPOSSIBLE REFERENCE NUMBER"/>
+        <entry key="30" value="FORMAT ERROR"/>
+        <entry key="31" value="UNKNOWN ACQUIRER ACCOUNT CODE"/>
+        <entry key="33" value="CARD EXPIRED"/>
+        <entry key="34" value="FRAUD SUSPICION"/>
+        <entry key="38" value="SECURITY CODE EXPIRED"/>
+        <entry key="40" value="REQUESTED FUNCTION NOT SUPPORTED"/>
+        <entry key="41" value="LOST CARD"/>
+        <entry key="43" value="STOLEN CARD, PICK UP"/>
+        <entry key="51" value="LIMIT EXCEEDED"/>
+        <entry key="55" value="INVALID SECURITY CODE"/>
+        <entry key="56" value="UNKNOWN CARD"/>
+        <entry key="57" value="ILLEGAL TRANSACTION"/>
+        <entry key="58" value="TRANSACTION NOT PERMITTED"/>
+        <entry key="62" value="RESTRICTED CARD"/>
+        <entry key="63" value="SECURITY RULES VIOLATED"/>
+        <entry key="64" value="AMOUNT HIGHER THAN PREVIOUS TRANSACTION AMOUNT"/>
+        <entry key="68" value="TRANSACTION TIMED OUT"/>
+        <entry key="75" value="SECURITY CODE INVALID"/>
+        <entry key="76" value="CARD BLOCKED"/>
+        <entry key="80" value="AMOUNT NO LONGER AVAILABLE, AUTHORISATION EXPIRED"/>
+        <entry key="85" value="REJECTED BY CARD ISSUER "/>
+        <entry key="91" value="CREDITCARD ISSUER TEMPORARILY NOT REACHABLE "/>
+        <entry key="92" value="CREDITCARD TYPE NOT PROCESSED BY ACQUIRER"/>
+        <entry key="94" value="DUPLICATE REQUEST ERROR"/>
+        <entry key="97" value="SECURITY BREACH"/>
+    </util:map>
+
+    <util:map id="worldpayCreditCards">
+        <entry key="4444333322221111" value="Visa"/>
+        <entry key="122000000000003" value="Airplus"/>
+        <entry key="34343434343434" value="American Express"/>
+        <entry key="5555555555554444" value="Cartebleue"/>
+        <entry key="5019717010103742" value="Dankort"/>
+        <entry key="36700102000000" value="Diners"/>
+        <entry key="6011000400000000" value="Discover card"/>
+        <entry key="3528000700000000" value="JCB"/>
+        <entry key="630495060000000000" value="Laser"/>
+        <entry key="6759649826438453" value="Maestro"/>
+        <entry key="5555555555554444" value="MasterCard"/>
+        <entry key="4462030000000000" value="Visa Debit"/>
+        <entry key="4917300800000000" value="Visa Electron (UK only)"/>
+        <entry key="4484070000000000" value="Visa Purchasing"/>
+    </util:map>
+
+    <util:map id="worldpayPaymentMethods">
+        <entry value="Visa" key="VISA-SSL"/>
+        <entry value="AirPlus" key="AIRPLUS-SSL"/>
+        <entry value="American Express SSL" key="AMEX-SSL"/>
+        <entry value="Aurore" key="AURORE-SSL"/>
+        <entry value="Diners" key="DINERS-SSL"/>
+        <entry value="GE Capital" key="GECAPITAL-SSL"/>
+        <entry value="Japanese Credit Bank" key="JCB-SSL"/>
+        <entry value="Maestro" key="MAESTRO-SSL"/>
+        <entry value="MasterCard" key="ECMC-SSL"/>
+        <entry value="MasterPass" key="MASTERPASS-SSL"/>
+        <entry value="UATP" key="UATP-SSL"/>
+        <entry value="V.Me" key="VME-SSL"/>
+        <entry value="Dankort" key="DANKORT-SSL"/>
+        <entry value="CarteBleu" key="CARTEBLEUE-SSL"/>
+        <entry value="Carte Bancaire" key="CB-SSL"/>
+        <entry value="Discover" key="DISCOVER-SSL"/>
+        <entry value="Laser" key="LASER-SSL"/>
+        <entry value="SoloGB" key="SOLO_GB-SSL"/>
+        <entry value="Switch" key="SWITCH-SSL"/>
+        <entry value="ELV" key="ELV-SSL"/>
+    </util:map>
+
+    <util:set id="possibleEvents">
+        <value>AUTHORISED</value>
+        <value>CANCELLED</value>
+        <value>REFUSED</value>
+        <value>SIGNED_FORM_RECEIVED</value>
+        <value>CAPTURED</value>
+        <value>CAPTURE_FAILED</value>
+        <value>SETTLED</value>
+        <value>CHARGED_BACK</value>
+        <value>CHARGEBACK_REVERSED</value>
+        <value>INFORMATION_REQUESTED</value>
+        <value>INFORMATION_SUPPLIED</value>
+        <value>EXPIRED</value>
+        <value>SENT_FOR_REFUND</value>
+        <value>REFUND_WEBFORM_ISSUED</value>
+        <value>REFUNDED</value>
+        <value>REFUSED_BY_BANK</value>
+        <value>REFUND_FAILED</value>
+        <value>REVOKE_REQUESTED</value>
+        <value>REVOKE_FAILED</value>
+        <value>REVOKED</value>
+    </util:set>
+
+    <util:set id="tokenEvents">
+        <value>NEW</value>
+        <value>MATCH</value>
+        <value>CONFLICT</value>
+        <value>USE</value>
+    </util:set>
+
+</beans>

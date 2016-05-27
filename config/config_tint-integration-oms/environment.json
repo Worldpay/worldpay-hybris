@@ -1,0 +1,15 @@
+{
+  "environment": {
+    "name": "tint-integration-oms",
+
+    "storefronts": {
+      "apparel-ukContentCatalog": {
+        "contentCatalog": "apparel-ukContentCatalog",
+        "apmComponents": "",
+        "mobileApmComponents": "",
+        "pageTemplate": "WorldpayCSEPaymentAndBillingCheckoutPageTemplate",
+        "mobilePageTemplate": "WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate"
+      }
+    }
+  }
+}

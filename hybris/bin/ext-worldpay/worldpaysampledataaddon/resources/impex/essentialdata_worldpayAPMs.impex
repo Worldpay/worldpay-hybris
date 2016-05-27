@@ -1,0 +1,159 @@
+INSERT_UPDATE Language;isocode[unique=true];fallbackLanguages(isocode);active[default=true]
+;zh;en
+
+INSERT_UPDATE Country;isocode[unique=true];name[lang=en];active[default=true]
+;SG;"Singapore"
+;CN;"China"
+
+INSERT_UPDATE Region;country(isocode);isocode[unique=true];isocodeShort;name[lang=en];active[default=true]
+;CN;CN-11;11;"Beijing"
+;CN;CN-50;50;"Chongqing"
+;CN;CN-31;31;"Shanghai"
+;CN;CN-12;12;"Tianjin"
+;CN;CN-34;34;"Anhui"
+;CN;CN-35;35;"Fujan"
+;CN;CN-62;62;"Gansu"
+;CN;CN-44;44;"Guangdong"
+;CN;CN-52;52;"Guizhou"
+;CN;CN-46;46;"Hainan"
+;CN;CN-13;13;"Hebei"
+;CN;CN-23;23;"Heilongjiang"
+;CN;CN-41;41;"Henan"
+;CN;CN-42;42;"Hubei"
+;CN;CN-43;43;"Hunan"
+;CN;CN-32;32;"Jiangsu"
+;CN;CN-36;36;"Jiangzi"
+;CN;CN-22;22;"Jilin"
+;CN;CN-21;21;"Liaoning"
+;CN;CN-63;63;"Qinghai"
+;CN;CN-61;61;"Shaanxi"
+;CN;CN-37;37;"Shandong"
+;CN;CN-14;14;"Shanxi"
+;CN;CN-51;51;"Sichuan"
+;CN;CN-71;71;"Taiwan"
+;CN;CN-53;53;"Yunnan"
+;CN;CN-33;33;"Zhejiang"
+;CN;CN-45;45;"Guangxi"
+;CN;CN-15;15;"Nei Mongol"
+;CN;CN-64;64;"Ningxia"
+;CN;CN-65;65;"Xinjiang"
+;CN;CN-54;54;"Xizang"
+;CN;CN-91;91;"Xianggang"
+;CN;CN-92;92;"Aomen"
+
+INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol;name[lang=en];active[default=true]
+;SGD;1;2;S$;Singapore Dollar
+;CNY;0.16;2;¥;Chinese Yuan
+
+# SiteMap Language Currencies
+INSERT_UPDATE SiteMapLanguageCurrency;&siteMapLanguageCurrency;language(isoCode)[unique=true];currency(isocode)[unique=true];
+;enSgd;en;SGD
+;enCny;en;CNY
+;cnUsd;zh;USD
+;cnSgd;zh;SGD
+
+# Delivery Zones
+INSERT_UPDATE Zone;code[unique=true];countries(isocode)
+;singapore;SG
+;china;CN
+
+# SINGAPORE
+INSERT_UPDATE ZoneDeliveryModeValue;deliveryMode(code)[unique=true];value;minimum[unique=true];currency(isocode)[unique=true];zone(code)[default='singapore'][unique=true]
+;premium-gross;10,99;0,00;SGD;
+;premium-gross;10,99;0,00;USD;
+;premium-gross;10,99;0,00;CNY;
+;premium-gross;10,99;0,00;GBP;
+;premium-gross;10,99;0,00;JPY;
+;premium-net;99,99;0,00;SGD;
+;premium-net;99,99;0,00;USD;
+;premium-net;99,99;0,00;CNY;
+;premium-net;99,99;0,00;GBP;
+;premium-net;99,99;0,00;JPY;
+;standard-gross;5,99;0,00;SGD;
+;standard-gross;5,99;0,00;USD;
+;standard-gross;5,99;0,00;CNY;
+;standard-gross;5,99;0,00;GBP;
+;standard-gross;5,99;0,00;JPY;
+;standard-net;59,99;0,00;SGD;
+;standard-net;59,99;0,00;USD;
+;standard-net;59,99;0,00;CNY;
+;standard-net;59,99;0,00;GBP;
+;standard-net;59,99;0,00;JPY;
+
+# CHINA
+INSERT_UPDATE ZoneDeliveryModeValue;deliveryMode(code)[unique=true];value;minimum[unique=true];currency(isocode)[unique=true];zone(code)[default='china'][unique=true]
+;premium-gross;10,99;0,00;SGD;
+;premium-gross;10,99;0,00;USD;
+;premium-gross;10,99;0,00;CNY;
+;premium-gross;10,99;0,00;GBP;
+;premium-gross;10,99;0,00;JPY;
+;premium-net;99,99;0,00;SGD;
+;premium-net;99,99;0,00;USD;
+;premium-net;99,99;0,00;CNY;
+;premium-net;99,99;0,00;GBP;
+;premium-net;99,99;0,00;JPY;
+;standard-gross;5,99;0,00;SGD;
+;standard-gross;5,99;0,00;USD;
+;standard-gross;5,99;0,00;CNY;
+;standard-gross;5,99;0,00;GBP;
+;standard-gross;5,99;0,00;JPY;
+;standard-net;59,99;0,00;SGD;
+;standard-net;59,99;0,00;USD;
+;standard-net;59,99;0,00;CNY;
+;standard-net;59,99;0,00;GBP;
+;standard-net;59,99;0,00;JPY;
+
+# UK
+INSERT_UPDATE ZoneDeliveryModeValue;deliveryMode(code)[unique=true];zone(code)[default='uk'][unique=true];currency(isocode)[unique=true];value;minimum[unique=true]
+;premium-gross;;SGD;14,49;0,00
+;premium-gross;;CNY;14,49;0,00
+;premium-net;;SGD;99,99;0,00
+;premium-net;;CNY;99,99;0,00
+;standard-gross;;SGD;7,49;0,00
+;standard-gross;;CNY;7,49;0,00
+;standard-net;;SGD;59,99;0,00
+;standard-net;;CNY;59,99;0,00
+
+# Continental Europe
+INSERT_UPDATE ZoneDeliveryModeValue;deliveryMode(code)[unique=true];zone(code)[default='continentalEurope'][unique=true];currency(isocode)[unique=true];value;minimum[unique=true]
+;premium-gross;;SGD;14,49;0,00
+;premium-gross;;CNY;14,49;0,00
+;premium-net;;SGD;99,99;0,00
+;premium-net;;CNY;99,99;0,00
+;standard-gross;;SGD;7,49;0,00
+;standard-gross;;CNY;7,49;0,00
+;standard-net;;SGD;59,99;0,00
+;standard-net;;CNY;59,99;0,00
+
+# USA
+INSERT_UPDATE ZoneDeliveryModeValue;deliveryMode(code)[unique=true];zone(code)[default='usa'][unique=true];currency(isocode)[unique=true];value;minimum[unique=true]
+;premium-gross;;SGD;14,49;0,00
+;premium-gross;;CNY;14,49;0,00
+;premium-net;;SGD;99,99;0,00
+;premium-net;;CNY;99,99;0,00
+;standard-gross;;SGD;7,49;0,00
+;standard-gross;;CNY;7,49;0,00
+;standard-net;;SGD;59,99;0,00
+;standard-net;;CNY;59,99;0,00
+
+# Canada
+INSERT_UPDATE ZoneDeliveryModeValue;deliveryMode(code)[unique=true];zone(code)[default='ca'][unique=true];currency(isocode)[unique=true];value;minimum[unique=true]
+;premium-gross;;SGD;14,49;0,00
+;premium-gross;;CNY;14,49;0,00
+;premium-net;;SGD;99,99;0,00
+;premium-net;;CNY;99,99;0,00
+;standard-gross;;SGD;7,49;0,00
+;standard-gross;;CNY;7,49;0,00
+;standard-net;;SGD;59,99;0,00
+;standard-net;;CNY;59,99;0,00
+
+# Japan
+INSERT_UPDATE ZoneDeliveryModeValue;deliveryMode(code)[unique=true];zone(code)[default='japan'][unique=true];currency(isocode)[unique=true];value;minimum[unique=true]
+;premium-gross;;SGD;14,49;0,00
+;premium-gross;;CNY;14,49;0,00
+;premium-net;;SGD;99,99;0,00
+;premium-net;;CNY;99,99;0,00
+;standard-gross;;SGD;7,49;0,00
+;standard-gross;;CNY;7,49;0,00
+;standard-net;;SGD;59,99;0,00
+;standard-net;;CNY;59,99;0,00

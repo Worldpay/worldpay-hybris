@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="resources"/>
+	<classpathentry exported="true" kind="src" output="eclipsebin/classes" path="src"/>
+	<classpathentry exported="true" kind="src" output="eclipsebin/hmc/classes" path="hmc/src"/>
+	<classpathentry exported="true" kind="src" output="eclipsebin/classes" path="testsrc"/>
+	<classpathentry exported="true" kind="src" output="eclipsebin/classes" path="gensrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/platform"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/addonsupport"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/hmc"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

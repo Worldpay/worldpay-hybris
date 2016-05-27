@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+    <extension abstractclassprefix="Generated" classprefix="Worldpayoms" managername="WorldpayomsManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="worldpayoms" usemaven="false">
+        <!-- for more information on maven managed libraries please consult https://wiki.hybris.com/x/Nq8sDQ -->
+
+        <!-- you should add all required extensions to this list, except platform extensions which are automatically required -->
+        <!-- <requires-extension name="cms"/> -->
+
+        <requires-extension name="platformbackoffice"/>
+        <requires-extension name="worldpayapi"/>
+        <requires-extension name="warehousingbackoffice"/>
+        <requires-extension name="worldpaynotificationaddon"/>
+        <requires-extension name="customersupportbackoffice"/>
+
+        <coremodule generated="true" manager="com.worldpay.jalo.WorldpayomsManager" packageroot="com.worldpay"/>
+
+        <meta key="backoffice-module" value="true"/>
+
+    </extension>
+
+</extensioninfo>

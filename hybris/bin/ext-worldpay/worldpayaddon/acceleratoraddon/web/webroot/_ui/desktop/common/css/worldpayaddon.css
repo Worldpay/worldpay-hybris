@@ -1,0 +1,48 @@
+.cms-payment-button {
+    margin-bottom: 10px;
+}
+
+.cms-payment-button > input[type=radio],
+.cms-payment-button > label span {
+    display: none;
+}
+
+.cms-payment-button > label.available-false {
+    display: none;
+}
+
+.cms-payment-button > label {
+    border: 1px solid transparent;
+    width: 60px;
+    height: 38px;
+    vertical-align:middle;
+    display: inline-flex;
+}
+
+.cms-payment-button label img {
+    pointer-events: none;
+    max-width:50px;
+    max-height:30px;
+    margin: auto;
+
+}
+
+.cms-payment-button > input[type="radio"]:checked + label {
+    background: #eee;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+#cardDetailsFieldSet input#cvc {
+    width: 20%;
+}
+
+#cardDetailsFieldSet select {
+    width: 120px;
+    display: inline;
+}
+
+.cms-payment-button label:hover {
+    border: 1px solid black;
+    border-radius: 3px;
+}

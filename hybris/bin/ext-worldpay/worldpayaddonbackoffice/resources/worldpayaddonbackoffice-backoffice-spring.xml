@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="worldpayaddonbackofficeLabelLocator" class="com.hybris.cockpitng.util.labels.ResourcesLabelLocator" scope="singleton" init-method="init" lazy-init="false">
+  		<property name="location" value="/worldpayaddonbackoffice-backoffice-labels/"/>
+  		<property name="name" value="labels"/>
+  	</bean>
+
+
+	<alias name="worldpayPaymentTransactionAmountRenderer" alias="paymentTransactionAmountRenderer"/>
+	<bean id="worldpayPaymentTransactionAmountRenderer" class="com.worldpay.worldpayaddonbackoffice.renderers.PaymentTransactionAmountRenderer">
+		<property name="typeFacade" ref="typeFacade"/>
+		<property name="propertyValueService" ref="propertyValueService"/>
+		<property name="labelService" ref="labelService"/>
+		<property name="permissionFacade" ref="permissionFacade"/>
+	</bean>
+
+</beans>

@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath:/merchants/merchants.xml"/>
+    <import resource="classpath:/fulfilment/worldpayapi-order-actions-spring.xml"/>
+
+    <!-- Worldpay Merchants -->
+    <alias name="defaultWorldpayMerchantInfoService" alias="worldpayMerchantInfoService"/>
+    <bean id="defaultWorldpayMerchantInfoService" class="com.worldpay.merchant.impl.DefaultWorldpayMerchantInfoService">
+        <property name="worldpayMerchantConfigDataService" ref="worldpayMerchantConfigDataService"/>
+        <property name="sessionService" ref="sessionService"/>
+        <property name="baseSiteService" ref="baseSiteService"/>
+        <property name="worldpayMerchantStrategy" ref="worldpayMerchantStrategy"/>
+    </bean>
+
+    <alias name="defaultWorldpayMerchantConfigDataService" alias="worldpayMerchantConfigDataService"/>
+    <bean id="defaultWorldpayMerchantConfigDataService" class="com.worldpay.merchant.impl.DefaultWorldpayMerchantConfigDataService">
+        <property name="siteConfigService" ref="siteConfigService"/>
+    </bean>
+
+    <alias name="defaultWorldpayMerchantStrategy" alias="worldpayMerchantStrategy"/>
+    <bean id="defaultWorldpayMerchantStrategy" class="com.worldpay.strategy.impl.DefaultWorldpayMerchantStrategy">
+        <property name="worldpayMerchantConfigDataService" ref="worldpayMerchantConfigDataService"/>
+    </bean>
+
+    <alias name="defaultWorldpayMerchantConfigDataFacade" alias="worldpayMerchantConfigDataFacade"/>
+    <bean id="defaultWorldpayMerchantConfigDataFacade" class="com.worldpay.facades.payment.merchant.impl.DefaultWorldpayMerchantConfigDataFacade">
+        <property name="worldpayMerchantStrategy" ref="worldpayMerchantStrategy"/>
+    </bean>
+
+    <!-- Strategies -->
+    <alias name="defaultWorldpayOrderInfoStrategy" alias="worldpayOrderInfoStrategy"/>
+    <bean id="defaultWorldpayOrderInfoStrategy" class="com.worldpay.merchant.strategies.impl.DefaultWorldpayOrderInfoStrategy"/>
+
+    <alias name="defaultWorldpayCustomerIpAddressStrategy" alias="worldpayCustomerIpAddressStrategy"/>
+    <bean id="defaultWorldpayCustomerIpAddressStrategy" class="com.worldpay.strategy.impl.DefaultWorldpayCustomerIpAddressStrategy">
+        <property name="headerName" value="X-Forwarded-For"/>
+
+        <!-- Possible headers that contain the customer IP
+            <property name="headerName" value="Proxy-Client-IP"/>
+            <property name="headerName" value="WL-Proxy-Client-IP"/>
+            <property name="headerName" value="HTTP_CLIENT_IP"/>
+            <property name="headerName" value="HTTP_X_FORWARDED_FOR"/>
+        -->
+    </bean>
+
+    <!-- Worldpay Config Lookup -->
+    <alias name="defaultWorldpayConfigLookupService" alias="worldpayConfigLookupService"/>
+    <bean id="defaultWorldpayConfigLookupService" class="com.worldpay.config.impl.DefaultWorldpayConfigLookupService">
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <!-- Worldpay Commands (Direct Authorise) -->
+    <bean name="worldpayCommand" abstract="true" class="com.worldpay.commands.impl.WorldpayCommand">
+        <property name="worldpayMerchantInfoService" ref="worldpayMerchantInfoService"/>
+        <property name="worldpayConfigLookupService" ref="worldpayConfigLookupService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="worldpayOrderService" ref="worldpayOrderService"/>
+    </bean>
+
+    <bean name="worldpayCommandFactory" class="de.hybris.platform.payment.commands.factory.impl.DefaultCommandFactoryImpl">
+        <property name="paymentProvider" value="Worldpay"/>
+        <property name="commands">
+            <map>
+                <entry>
+                    <key>
+                        <value type="java.lang.Class">de.hybris.platform.payment.commands.CaptureCommand</value>
+                    </key>
+                    <bean class="com.worldpay.commands.impl.DefaultWorldpayCaptureCommand" parent="worldpayCommand">
+                        <property name="captureServiceResponseConverter" ref="captureServiceResponseConverter"/>
+                    </bean>
+                </entry>
+                <entry>
+                    <key>
+                        <value type="java.lang.Class">de.hybris.platform.payment.commands.PartialCaptureCommand</value>
+                    </key>
+                    <bean class="com.worldpay.commands.impl.DefaultWorldpayCaptureCommand" parent="worldpayCommand">
+                        <property name="captureServiceResponseConverter" ref="captureServiceResponseConverter"/>
+                    </bean>
+                </entry>
+                <entry>
+                    <key>
+                        <value type="java.lang.Class">de.hybris.platform.payment.commands.VoidCommand</value>
+                    </key>
+                    <bean class="com.worldpay.commands.impl.DefaultWorldpayVoidCommand" parent="worldpayCommand">
+                        <property name="voidServiceResponseConverter" ref="voidServiceResponseConverter"/>
+                    </bean>
+                </entry>
+                <entry>
+                    <key>
+                        <value type="java.lang.Class">de.hybris.platform.payment.commands.FollowOnRefundCommand</value>
+                    </key>
+                    <bean class="com.worldpay.commands.impl.DefaultWorldpayFollowOnRefundCommand" parent="worldpayCommand">
+                        <property name="refundServiceResponseConverter" ref="refundServiceResponseConverter"/>
+                    </bean>
+                </entry>
+                <entry>
+                    <key>
+                        <value type="java.lang.Class">de.hybris.platform.payment.commands.SubscriptionAuthorizationCommand</value>
+                    </key>
+                    <bean class="com.worldpay.commands.impl.DefaultWorldpayTokenisedAuthorizationCommand" parent="worldpayCommand">
+                        <property name="worldpayAuthorizationResultConverter" ref="worldpayTokenisedDirectAuthorizationResponseConverter"/>
+                        <property name="worldpayBillingInfoAddressConverter" ref="worldpayBillingInfoAddressConverter"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean id="redirectAuthoriseResult" class="com.worldpay.hostedorderpage.data.RedirectAuthoriseResult" scope="prototype"/>
+
+    <alias name="defaultRedirectAuthoriseResultConverter" alias="redirectAuthoriseResultConverter"/>
+    <bean id="defaultRedirectAuthoriseResultConverter" parent="abstractPopulatingConverter">
+        <lookup-method name="createTarget" bean="redirectAuthoriseResult"/>
+        <property name="populators">
+            <list>
+                <ref bean="redirectAuthoriseResultPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias name="defaultRedirectAuthoriseResultPopulator" alias="redirectAuthoriseResultPopulator"/>
+    <bean id="defaultRedirectAuthoriseResultPopulator" class="com.worldpay.hostedorderpage.converters.RedirectAuthoriseResultPopulator"/>
+
+    <bean id="abstractWorldpayOrderService" class="com.worldpay.service.payment.impl.AbstractWorldpayOrderService" abstract="true">
+        <property name="commonI18NService" ref="commonI18NService"/>
+        <property name="modelService" ref="modelService"/>
+        <property name="commerceCheckoutService" ref="commerceCheckoutService"/>
+        <property name="customerEmailResolutionService" ref="customerEmailResolutionService"/>
+        <property name="worldpayConfigLookupService" ref="worldpayConfigLookupService"/>
+        <property name="worldpayPaymentInfoService" ref="worldpayPaymentInfoService"/>
+        <property name="worldpayPaymentTransactionService" ref="worldpayPaymentTransactionService"/>
+        <property name="worldpayOrderService" ref="worldpayOrderService"/>
+        <property name="worldpayAddressConverter" ref="worldpayAddressConverter"/>
+        <property name="worldpayGenerateMerchantTransactionCodeStrategy" ref="worldpayGenerateMerchantTransactionCodeStrategy"/>
+    </bean>
+
+    <alias name="defaultWorldpayRedirectOrderService" alias="worldpayRedirectOrderService"/>
+    <bean id="defaultWorldpayRedirectOrderService" class="com.worldpay.service.payment.impl.DefaultWorldpayRedirectOrderService" parent="abstractWorldpayOrderService">
+        <property name="sessionService" ref="sessionService"/>
+        <property name="worldpayURIService" ref="worldpayURIService"/>
+        <property name="worldpayUrlService" ref="worldpayUrlService"/>
+        <property name="worldpayAuthenticatedShopperIdStrategy" ref="worldpayAuthenticatedShopperIdStrategy"/>
+        <property name="worldpayTokenEventReferenceCreationStrategy" ref="worldpayTokenEventReferenceCreationStrategy"/>
+        <property name="worldpayDeliveryAddressStrategy" ref="worldpayDeliveryAddressStrategy"/>
+    </bean>
+
+    <alias name="defaultWorldpayDirectOrderService" alias="worldpayDirectOrderService"/>
+    <bean id="defaultWorldpayDirectOrderService" class="com.worldpay.service.payment.impl.DefaultWorldpayDirectOrderService"
+          parent="abstractWorldpayOrderService">
+        <property name="sessionService" ref="sessionService"/>
+        <property name="cartService" ref="cartService"/>
+        <property name="worldpayRequestFactory" ref="worldpayRequestFactory"/>
+    </bean>
+
+    <alias name="defaultWorldpayRequestFactory" alias="worldpayRequestFactory"/>
+    <bean id="defaultWorldpayRequestFactory" class="com.worldpay.service.payment.request.impl.DefaultWorldpayRequestFactory">
+        <property name="customerEmailResolutionService" ref="customerEmailResolutionService"/>
+        <property name="worldpayConfigLookupService" ref="worldpayConfigLookupService"/>
+        <property name="worldpayAddressConverter" ref="worldpayAddressConverter"/>
+        <property name="worldpayOrderService" ref="worldpayOrderService"/>
+        <property name="worldpayGenerateMerchantTransactionCodeStrategy" ref="worldpayGenerateMerchantTransactionCodeStrategy"/>
+        <property name="worldpayTokenEventReferenceCreationStrategy" ref="worldpayTokenEventReferenceCreationStrategy"/>
+        <property name="worldpayDeliveryAddressStrategy" ref="worldpayDeliveryAddressStrategy"/>
+    </bean>
+
+    <bean id="abstractWorldpayUrlService" class="com.worldpay.service.impl.AbstractWorldpayUrlService" abstract="true">
+        <property name="successPath" value="/checkout/multi/worldpay/hop-response"/>
+        <property name="pendingPath" value="/checkout/multi/worldpay/hop-pending"/>
+        <property name="failurePath" value="/checkout/multi/worldpay/hop-response"/>
+        <property name="errorPath" value="/checkout/multi/worldpay/error"/>
+        <property name="cancelPath" value="/checkout/multi/worldpay/hop-cancel"/>
+        <property name="threeDSecureTermPath" value="/checkout/multi/worldpay/3dsecure/sop/response"/>
+    </bean>
+
+    <bean id="bankTransferWorldpayUrlService" class="com.worldpay.service.impl.DefaultWorldpayUrlService" parent="abstractWorldpayUrlService">
+        <property name="baseSiteService" ref="baseSiteService"/>
+        <property name="siteBaseUrlResolutionService" ref="siteBaseUrlResolutionService"/>
+        <property name="successPath" value="/checkout/multi/worldpay/bank-transfer/hop-response"/>
+        <property name="failurePath" value="/checkout/multi/worldpay/bank-transfer/hop-failure"/>
+        <property name="pendingPath" value="/checkout/multi/worldpay/bank-transfer/hop-pending"/>
+    </bean>
+
+    <alias name="defaultWorldpayUrlService" alias="worldpayUrlService"/>
+    <bean id="defaultWorldpayUrlService" class="com.worldpay.service.impl.DefaultWorldpayUrlService" parent="abstractWorldpayUrlService">
+        <property name="baseSiteService" ref="baseSiteService"/>
+        <property name="siteBaseUrlResolutionService" ref="siteBaseUrlResolutionService"/>
+    </bean>
+
+    <alias name="defaultWorldpayURIService" alias="worldpayURIService"/>
+    <bean id="defaultWorldpayURIService" class="com.worldpay.hostedorderpage.service.impl.DefaultWorldpayURIService"/>
+
+    <!-- checks if a payment authorization paymentTransaction is 'successful' respectively 'valid' -->
+    <alias name="worldpayTransactionInfoService" alias="transactionInfoService"/>
+    <bean name="worldpayTransactionInfoService" class="com.worldpay.payment.impl.WorldpayTransactionInfoService" parent="defaultTransactionInfoService"/>
+
+
+    <alias name="defaultWorldpayAdditionalInfoService" alias="worldpayAdditionalInfoService"/>
+    <bean id="defaultWorldpayAdditionalInfoService" class="com.worldpay.service.payment.impl.DefaultWorldpayAdditionalInfoService">
+        <property name="worldpayCustomerIpAddressStrategy" ref="worldpayCustomerIpAddressStrategy"/>
+    </bean>
+
+    <!-- Converters and populators -->
+    <alias name="defaultWorldpayAddressConverter" alias="worldpayAddressConverter"/>
+    <bean id="defaultWorldpayAddressConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="com.worldpay.service.model.Address"/>
+        <property name="populators">
+            <list>
+                <ref bean="worldpayAddressPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias name="defaultWorldpayBillingInfoAddressConverter" alias="worldpayBillingInfoAddressConverter"/>
+    <bean id="defaultWorldpayBillingInfoAddressConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="com.worldpay.service.model.Address"/>
+        <property name="populators">
+            <list>
+                <ref bean="worldpayBillingInfoAddressPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="worldpayAddressPopulator" class="com.worldpay.converters.populators.WorldpayAddressPopulator"/>
+    <bean id="worldpayBillingInfoAddressPopulator" class="com.worldpay.converters.populators.WorldpayBillingInfoAddressPopulator"/>
+
+    <bean id="orderNotificationRequestToMessageConverter" class="com.worldpay.converters.OrderModificationRequestConverter"/>
+
+    <bean id="worldpayRiskScoreConverter" class="com.worldpay.converters.WorldpayRiskScoreConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="com.worldpay.model.WorldpayRiskScoreModel"/>
+        <property name="modelService" ref="modelService"/>
+    </bean>
+
+    <bean id="worldpayAbstractServiceResponseConverter" class="com.worldpay.converters.WorldpayAbstractServiceResponseConverter" abstract="true" parent="abstractPopulatingConverter"/>
+
+    <alias name="worldpayVoidServiceResponseConverter" alias="voidServiceResponseConverter"/>
+    <bean id="worldpayVoidServiceResponseConverter" class="com.worldpay.converters.WorldpayVoidServiceResponseConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="de.hybris.platform.payment.commands.result.VoidResult"/>
+    </bean>
+
+    <alias name="worldpayRefundServiceResponseConverter" alias="refundServiceResponseConverter"/>
+    <bean id="worldpayRefundServiceResponseConverter" class="com.worldpay.converters.WorldpayRefundServiceResponseConverter" parent="worldpayAbstractServiceResponseConverter">
+        <property name="targetClass" value="de.hybris.platform.payment.commands.result.RefundResult"/>
+    </bean>
+
+    <alias name="worldpayCaptureServiceResponseConverter" alias="captureServiceResponseConverter"/>
+    <bean id="worldpayCaptureServiceResponseConverter" class="com.worldpay.converters.WorldpayCaptureServiceResponseConverter" parent="worldpayAbstractServiceResponseConverter">
+        <property name="targetClass" value="de.hybris.platform.payment.commands.result.CaptureResult"/>
+    </bean>
+
+    <bean id="worldpayDirectAuthoriseServiceResponseConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="com.worldpay.commands.WorldpaySubscriptionAuthorizeResult"/>
+        <property name="populators">
+            <list>
+                <ref bean="worldpaySubscriptionAuthorizeResultPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="worldpayTokenisedDirectAuthorizationResponseConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="de.hybris.platform.payment.commands.result.AuthorizationResult"/>
+        <property name="populators">
+            <list>
+                <ref bean="worldpayAuthorizationResultPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias name="defaultWorldpayPaymentTransactionService" alias="worldpayPaymentTransactionService"/>
+    <bean id="defaultWorldpayPaymentTransactionService" class="com.worldpay.transaction.impl.DefaultWorldpayPaymentTransactionService">
+        <property name="paymentTransactionDependency" ref="dependingPaymentTransaction"/>
+        <property name="entryCodeStrategy" ref="worldpayEntryCodeStrategy"/>
+        <property name="commonI18NService" ref="commonI18NService"/>
+        <property name="modelService" ref="modelService"/>
+        <property name="worldpayPaymentTransactionDao" ref="paymentTransactionDao"/>
+        <property name="worldpayRiskScoreConverter" ref="worldpayRiskScoreConverter"/>
+        <property name="worldpayAavResponsePopulator" ref="worldpayAavResponsePopulator"/>
+    </bean>
+
+    <bean id="worldpayAavResponsePopulator" class="com.worldpay.converters.populators.WorldpayAavResponsePopulator"/>
+
+    <bean id="worldpaySubscriptionAuthorizeResultPopulator" class="com.worldpay.converters.populators.WorldpaySubscriptionAuthoriseResultPopulator">
+        <property name="worldpayAuthorisationResultService" ref="worldpayAuthorisationResultService"/>
+    </bean>
+
+    <bean id="worldpayAuthorizationResultPopulator" class="com.worldpay.converters.populators.WorldpayAuthorizationResultPopulator">
+        <property name="worldpayAuthorisationResultService" ref="worldpayAuthorisationResultService"/>
+    </bean>
+
+    <alias name="defaultWorldpayGenerateMerchantTransactionCodeStrategy" alias="worldpayGenerateMerchantTransactionCodeStrategy"/>
+    <bean id="defaultWorldpayGenerateMerchantTransactionCodeStrategy" class="com.worldpay.core.services.strategies.impl.WorldpayGenerateMerchantTransactionCodeStrategy">
+        <property name="modelService" ref="modelService"/>
+        <property name="cartService" ref="cartService"/>
+    </bean>
+
+    <bean id="defaultWorldpayapiLabelLocator" class="de.hybris.platform.cockpit.util.ConfigurableCockpitLabelLocator" lazy-init="false">
+        <property name="resourceFolder" value="/worldpayapi/cockpit/localization/"/>
+    </bean>
+
+    <bean id="worldpayPaymentInfoIsApmHandler" class="com.worldpay.attributehandlers.WorldpayPaymentInfoIsApmHandler">
+        <property name="apmConfigurationLookupService" ref="apmConfigurationLookupService"/>
+    </bean>
+
+    <bean id="worldpayAPMConfigurationDao" class="com.worldpay.core.dao.WorldpayAPMConfigurationDao"/>
+    <bean id="worldpayBankConfigurationDao" class="com.worldpay.core.dao.WorldpayBankConfigurationDao"/>
+    <bean id="worldpayEntryCodeStrategy" class="com.worldpay.transaction.impl.WorldpayEntryCodeStrategyImpl"/>
+
+    <alias alias="worldpayCartDao" name="defaultWorldpayCartDao"/>
+    <bean id="defaultWorldpayCartDao" class="com.worldpay.core.dao.impl.DefaultWorldpayCartDao" parent="abstractItemDao">
+        <property name="flexibleSearchService" ref="flexibleSearchService"/>
+        <property name="modelService" ref="modelService"/>
+    </bean>
+
+    <alias alias="worldpayCartService" name="defaultWorldpayCartService"/>
+    <bean id="defaultWorldpayCartService" class="com.worldpay.core.services.impl.DefaultWorldpayCartService">
+        <property name="worldpayCartDao" ref="worldpayCartDao"/>
+        <property name="modelService" ref="modelService"/>
+    </bean>
+
+    <alias alias="apmConfigurationLookupService" name="defaultAPMConfigurationLookupService"/>
+    <bean id="defaultAPMConfigurationLookupService" class="com.worldpay.core.services.impl.DefaultAPMConfigurationLookupService">
+        <property name="worldpayAPMConfigurationDao" ref="worldpayAPMConfigurationDao"/>
+    </bean>
+
+    <alias alias="worldpayBankConfigurationLookupService" name="defaultWorldpayBankConfigurationLookupService"/>
+    <bean id="defaultWorldpayBankConfigurationLookupService" class="com.worldpay.core.services.impl.DefaultWorldpayBankConfigurationLookupService">
+        <property name="worldpayBankConfigurationDao" ref="worldpayBankConfigurationDao"/>
+        <property name="apmConfigurationLookupService" ref="apmConfigurationLookupService"/>
+    </bean>
+
+
+    <alias alias="paymentTransactionDao" name="worldpayPaymentTransactionDao"/>
+    <bean id="worldpayPaymentTransactionDao" class="com.worldpay.core.dao.impl.DefaultWorldpayPaymentTransactionDao" parent="abstractItemDao">
+        <property name="flexibleSearchService" ref="flexibleSearchService"/>
+    </bean>
+
+    <alias name="defaultApmAvailabilityCountryStrategy" alias="apmAvailabilityCountryStrategy"/>
+    <bean id="defaultApmAvailabilityCountryStrategy" class="com.worldpay.service.apm.strategy.impl.APMAvailabilityCountryStrategy">
+        <property name="worldpayDeliveryAddressStrategy" ref="worldpayDeliveryAddressStrategy"/>
+    </bean>
+
+    <alias name="defaultWorldpayDeliveryAddressStrategy" alias="worldpayDeliveryAddressStrategy"/>
+    <bean id="defaultWorldpayDeliveryAddressStrategy" class="com.worldpay.strategy.impl.DefaultWorldpayDeliveryAddressStrategy"/>
+
+    <alias name="defaultApmAvailabilityCurrencyStrategy" alias="apmAvailabilityCurrencyStrategy"/>
+    <bean id="defaultApmAvailabilityCurrencyStrategy" class="com.worldpay.service.apm.strategy.impl.APMAvailabilityCurrencyStrategy"/>
+
+    <alias name="defaultApmAvailabilityRangeStrategy" alias="apmAvailabilityRangeStrategy"/>
+    <bean id="defaultApmAvailabilityRangeStrategy" class="com.worldpay.service.apm.strategy.impl.APMAvailabilityRangeStrategy"/>
+
+    <alias name="defaultApmAvailabilityBankStrategy" alias="apmAvailabilityBankStrategy"/>
+    <bean id="defaultApmAvailabilityBankStrategy" class="com.worldpay.service.apm.strategy.impl.APMAvailabilityBankStrategy">
+        <property name="worldpayBankConfigurationLookupService" ref="worldpayBankConfigurationLookupService"/>
+    </bean>
+
+    <alias name="defaultAPMAvailabilityService" alias="apmAvailabilityService"/>
+    <bean id="defaultAPMAvailabilityService" class="com.worldpay.service.apm.impl.DefaultAPMAvailabilityService">
+        <property name="apmAvailabilityStrategyList">
+            <list>
+                <ref bean="apmAvailabilityCountryStrategy"/>
+                <ref bean="apmAvailabilityCurrencyStrategy"/>
+                <ref bean="apmAvailabilityRangeStrategy"/>
+                <ref bean="apmAvailabilityBankStrategy"/>
+            </list>
+        </property>
+    </bean>
+
+    <alias name="defaultPaymentInfoService" alias="worldpayPaymentInfoService"/>
+    <bean id="defaultPaymentInfoService" class="com.worldpay.core.services.impl.DefaultWorldpayPaymentInfoService">
+        <property name="modelService" ref="modelService"/>
+        <property name="apmConfigurationLookupService" ref="apmConfigurationLookupService"/>
+        <property name="enumerationService" ref="enumerationService"/>
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <alias name="defaultWorldpayOrderService" alias="worldpayOrderService"/>
+    <bean id="defaultWorldpayOrderService" class="com.worldpay.service.payment.impl.DefaultWorldpayOrderService">
+        <property name="commonI18NService" ref="commonI18NService"/>
+        <property name="worldpayUrlService" ref="bankTransferWorldpayUrlService"/>
+    </bean>
+
+    <alias name="defaultWorldpaySupportEmailService" alias="worldpaySupportEmailService"/>
+    <bean id="defaultWorldpaySupportEmailService" class="com.worldpay.support.impl.DefaultWorldpaySupportEmailService">
+        <property name="emailAppenders">
+            <list>
+                <ref bean="hybrisVersionAppender"/>
+                <ref bean="hybrisAddonVersionAppender"/>
+                <ref bean="currentTimeAppender"/>
+                <ref bean="userDisplayNameAppender"/>
+                <ref bean="merchantConfigurationAppender"/>
+                <ref bean="configuredFlowsAppender"/>
+                <ref bean="paymentTransactionAppender"/>
+                <ref bean="extensionListAppender"/>
+                <ref bean="clusterInformationAppender"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Email Appenders -->
+    <bean id="clusterInformationAppender" class="com.worldpay.support.appender.impl.WorldpayClusterInformationAppender"/>
+
+    <bean id="configuredFlowsAppender" class="com.worldpay.support.appender.impl.WorldpayConfiguredFlowsAppender">
+        <property name="cmsSiteService" ref="cmsSiteService"/>
+        <property name="cmsPageDao" ref="cmsPageDao"/>
+    </bean>
+
+    <bean id="currentTimeAppender" class="com.worldpay.support.appender.impl.WorldpayCurrentTimeAppender"/>
+
+    <bean id="extensionListAppender" class="com.worldpay.support.appender.impl.WorldpayExtensionListAppender"/>
+
+    <bean id="merchantConfigurationAppender" class="com.worldpay.support.appender.impl.WorldpayMerchantConfigurationAppender"/>
+
+    <bean id="hybrisVersionAppender" class="com.worldpay.support.appender.impl.WorldpayHybrisVersionAppender">
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <bean id="hybrisAddonVersionAppender" class="com.worldpay.support.appender.impl.WorldpayAddonVersionAppender">
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <bean id="paymentTransactionAppender" class="com.worldpay.support.appender.impl.WorldpayPaymentTransactionTypesAppender"/>
+
+    <bean id="userDisplayNameAppender" class="com.worldpay.support.appender.impl.WorldpayUserDisplayNameAppender">
+        <property name="userService" ref="userService"/>
+    </bean>
+
+    <alias name="defaultWorldpaySupportService" alias="worldpaySupportService"/>
+    <bean id="defaultWorldpaySupportService" class="com.worldpay.support.impl.DefaultWorldpaySupportService">
+        <property name="configurationService" ref="configurationService"/>
+        <property name="worldpaySupportEmailService" ref="worldpaySupportEmailService"/>
+    </bean>
+
+
+    <alias name="defaultWorldpayTokenEventReferenceCreationStrategy" alias="worldpayTokenEventReferenceCreationStrategy"/>
+    <bean id="defaultWorldpayTokenEventReferenceCreationStrategy" class="com.worldpay.service.payment.impl.DefaultWorldpayTokenEventReferenceCreationStrategy">
+        <property name="cartService" ref="cartService"/>
+    </bean>
+
+    <alias name="defaultWorldpayAuthenticatedShopperIdStrategy" alias="worldpayAuthenticatedShopperIdStrategy"/>
+    <bean id="defaultWorldpayAuthenticatedShopperIdStrategy" class="com.worldpay.strategy.impl.DefaultWorldpayAuthenticatedShopperIdStrategy"/>
+
+    <alias name="defaultWorldpayAuthorisationResultService" alias="worldpayAuthorisationResultService"/>
+    <bean id="defaultWorldpayAuthorisationResultService" class="com.worldpay.service.impl.DefaultWorldpayAuthorisationResultService"/>
+
+    <!-- Interceptors -->
+    <!-- Generic code generator-->
+    <bean id="worldpayTxDataCodeGenerator" class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator">
+        <property name="key" value="worldpay_payment"/>
+        <property name="digits" value="8"/>
+        <property name="start" value="00000000"/>
+    </bean>
+
+    <bean id="worldpayItemCodePrepareInterceptor" class="com.worldpay.interceptors.WorldpayItemCodePrepareInterceptor">
+        <property name="keyGenerator" ref="worldpayTxDataCodeGenerator"/>
+        <property name="typeService" ref="typeService"/>
+        <property name="fieldName" value="code"/>
+    </bean>
+
+    <!--Interceptor Mapping-->
+    <bean id="worldpayAavResponseInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="worldpayItemCodePrepareInterceptor"/>
+        <property name="typeCode" value="WorldpayAavResponse"/>
+    </bean>
+    <bean id="worldpayRiskScoreInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="worldpayItemCodePrepareInterceptor"/>
+        <property name="typeCode" value="WorldpayRiskScore"/>
+    </bean>
+    <!-- Interceptors -->
+
+    <util:map id="paymentTransactionTypeMap" map-class="java.util.HashMap"
+              key-type="com.worldpay.service.model.AuthorisedStatus" value-type="de.hybris.platform.payment.enums.PaymentTransactionType">
+        <entry key="AUTHORISED" value="AUTHORIZATION"/>
+        <entry key="CAPTURED" value="CAPTURE"/>
+        <entry key="REFUSED" value="CANCEL"/>
+    </util:map>
+
+    <util:map id="dependingPaymentTransaction" key-type="de.hybris.platform.payment.enums.PaymentTransactionType" value-type="de.hybris.platform.payment.enums.PaymentTransactionType">
+        <entry key="CAPTURE" value="AUTHORIZATION"/>
+    </util:map>
+
+    <!-- Fraud service -->
+    <alias alias="fraudService" name="worldpayFraudService"/>
+    <bean id="worldpayFraudService" class="de.hybris.platform.fraud.impl.DefaultFraudService">
+        <property name="providers">
+            <list>
+                <ref bean="worldpayFraudServiceProvider"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="worldpayFraudServiceProvider" class="de.hybris.platform.fraud.impl.DefaultHybrisFraudServiceProvider">
+        <property name="providerName" value="worldpay"/>
+        <property name="symptomList">
+            <list>
+                <ref bean="worldpayRiskScoreFraudSymptom"/>
+                <ref bean="worldpayRiskGuardianFraudSymptom"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="worldpayRiskGuardianFraudSymptom" class="com.worldpay.fraud.symptoms.WorldpayRiskGuardianFraudSymptom">
+        <property name="symptomName" value="WorldpayRiskGuardianFraudSymptom"/>
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <bean id="worldpayRiskScoreFraudSymptom" class="com.worldpay.fraud.symptoms.WorldpayRiskScoreFraudSymptom">
+        <property name="symptomName" value="WorldpayRiskValueFraudSymptom"/>
+        <property name="configurationService" ref="configurationService"/>
+    </bean>
+
+    <!-- Cancellation strategies -->
+    <bean id="worldpayOrderCancelDenialStrategy" class="com.worldpay.ordercancel.impl.denialstrategies.WorldpayOrderCancelDenialStrategy">
+        <property name="reason">
+            <bean class="de.hybris.platform.ordercancel.DefaultOrderCancelDenialReason">
+                <property name="code" value="4"/>
+                <property name="description" value="Order cannot be cancelled as there are captured transaction entries."/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="worldpayCancelOrderServiceListMergeDirective" depends-on="orderCancelService" parent="listMergeDirective">
+        <property name="add" ref="worldpayOrderCancelDenialStrategy"/>
+        <property name="listPropertyDescriptor" value="cancelDenialStrategies"/>
+    </bean>
+
+    <bean id="worldpayApmOrderCancelDenialStrategy" class="com.worldpay.ordercancel.impl.denialstrategies.WorldpayApmOrderCancelDenialStrategy">
+        <property name="reason">
+            <bean class="de.hybris.platform.ordercancel.DefaultOrderCancelDenialReason">
+                <property name="code" value="5"/>
+                <property name="description" value="Order cannot be cancelled as payment was made through an APM or is still unknown."/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="worldpayApmCancelOrderServiceListMergeDirective" depends-on="orderCancelService" parent="listMergeDirective">
+        <property name="add" ref="worldpayApmOrderCancelDenialStrategy"/>
+        <property name="listPropertyDescriptor" value="cancelDenialStrategies"/>
+    </bean>
+
+</beans>

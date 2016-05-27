@@ -1,0 +1,26 @@
+{
+  "environment": {
+    "name": "uat",
+
+    "storefronts": {
+      "electronicsContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,postepayComponent,mistercashComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayCSEPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileCSEPaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-ukContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,postepayComponent,mistercashComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobilePaymentAndBillingCheckoutPageTemplate"
+      },
+      "apparel-deContentCatalog": {
+        "apmComponents": "creditCardComponent,payPalComponent,postepayComponent,mistercashComponent,chinaUnionPayComponent,alipayComponent,enetsComponent,idealComponent",
+        "mobileApmComponents": "",
+        "paymentPageTemplate": "WorldpayLightboxPaymentAndBillingCheckoutPageTemplate",
+        "mobilePaymentPageTemplate": "WorldpayMobileIframePaymentAndBillingCheckoutPageTemplate"
+      }
+    }
+  }
+}

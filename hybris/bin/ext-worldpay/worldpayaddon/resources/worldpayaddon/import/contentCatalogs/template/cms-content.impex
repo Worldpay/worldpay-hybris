@@ -1,0 +1,158 @@
+######
+## PARAMETERS REQUIRED FOR THIS SCRIPT
+##
+##   * contentCatalog   - content catalog id
+##   * addonExtensionName - extension name of the ui addon
+#######
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCmsCockpit=jar:com.worldpay.constants.WorldpayaddonConstants&/worldpayaddon/import/cockpits/cmscockpit
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;restrictedPageTypes(code);active[default=true];frontendTemplateName
+;;WorldpayPaymentAndBillingCheckoutPageTemplate;Worldpay Redirect Payment Page Template;WorldpayPaymentPage;;addon:/$addonExtensionName/pages/checkout/multi/worldpayChooseRedirectPaymentDetailsPage
+;;WorldpayCSEPaymentAndBillingCheckoutPageTemplate;Worldpay CSE Payment Page Template;WorldpayPaymentPage;;addon:/$addonExtensionName/pages/checkout/multi/worldpayChooseCSEPaymentDetailsPage
+;;WorldpayLightboxPaymentAndBillingCheckoutPageTemplate;Worldpay Lightbox Payment Page Template;WorldpayPaymentPage;;addon:/$addonExtensionName/pages/checkout/multi/worldpayChooseLightboxPaymentDetailsPage
+;;WorldpayIframePaymentAndBillingCheckoutPageTemplate;Worldpay iFrame Payment Page Template;WorldpayPaymentPage;;addon:/$addonExtensionName/pages/checkout/multi/worldpayChooseIframePaymentDetailsPage
+
+#The velocity template is imported after creating a pageTemplate
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;WorldpayPaymentAndBillingCheckoutPageTemplate;$jarResourceCmsCockpit/structure-view/structure_WorldpayPaymentAndBillingCheckoutPageTemplate.vm
+;;WorldpayCSEPaymentAndBillingCheckoutPageTemplate;$jarResourceCmsCockpit/structure-view/structure_WorldpayCSEPaymentAndBillingCheckoutPageTemplate.vm
+;;WorldpayLightboxPaymentAndBillingCheckoutPageTemplate;$jarResourceCmsCockpit/structure-view/structure_WorldpayLightboxPaymentAndBillingCheckoutPageTemplate.vm
+;;WorldpayIframePaymentAndBillingCheckoutPageTemplate;$jarResourceCmsCockpit/structure-view/structure_WorldpayIframePaymentAndBillingCheckoutPageTemplate.vm
+
+# Content Pages
+INSERT_UPDATE WorldpayPaymentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false'];
+;;worldpayPaymentAndBillingCheckoutPage;Worldpay Payment And Billing Checkout Page;WorldpayPaymentAndBillingCheckoutPageTemplate;worldpayPaymentAndBillingCheckoutStep
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name
+;;WorldpayPaymentButtonsSlot;"Payment Buttons"
+
+# ContentSlotNames for WorldpayPaymentAndBillingCheckoutPageTemplate
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='WorldpayPaymentAndBillingCheckoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;PaymentButtons;;;worldpaypaymentbuttons
+;SideContent;;;narrow
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+;PlaceholderContentSlot;;;
+
+# ContentSlotNames for WorldpayCSEPaymentAndBillingCheckoutPageTemplate
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='WorldpayCSEPaymentAndBillingCheckoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;PaymentButtons;;;worldpaypaymentbuttons
+;SideContent;;;narrow
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+;PlaceholderContentSlot;;;
+
+# ContentSlotNames for WorldpayLightboxPaymentAndBillingCheckoutPageTemplate
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='WorldpayLightboxPaymentAndBillingCheckoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;PaymentButtons;;;worldpaypaymentbuttons
+;SideContent;;;narrow
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+;PlaceholderContentSlot;;;
+
+# ContentSlotNames for WorldpayIframePaymentAndBillingCheckoutPageTemplate
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='WorldpayIframePaymentAndBillingCheckoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;PaymentButtons;;;worldpaypaymentbuttons
+;SideContent;;;narrow
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+;PlaceholderContentSlot;;;
+
+
+# Bind Content Slots to the Worldpay Payment And Billing Checkout Page Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='WorldpayPaymentAndBillingCheckoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-WorldpayPaymentAndBillingCheckoutPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-WorldpayPaymentAndBillingCheckoutPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-WorldpayPaymentAndBillingCheckoutPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-WorldpayPaymentAndBillingCheckoutPage;MiniCart;;MiniCartSlot;true
+;;PaymentButtons-WorldpayPaymentAndBillingCheckoutPage;PaymentButtons;;WorldpayPaymentButtonsSlot;true
+;;Footer-WorldpayPaymentAndBillingCheckoutPage;Footer;;FooterSlot;true
+;;HeaderLinks-WorldpayPaymentAndBillingCheckoutPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-WorldpayPaymentAndBillingCheckoutPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-WorldpayPaymentAndBillingCheckoutPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-WorldpayPaymentAndBillingCheckoutPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-WorldpayPaymentAndBillingCheckoutPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+# Bind Content Slots to the Worldpay CSE Payment And Billing Checkout Page Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='WorldpayCSEPaymentAndBillingCheckoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-WorldpayCSEPaymentAndBillingCheckoutPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-WorldpayCSEPaymentAndBillingCheckoutPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-WorldpayCSEPaymentAndBillingCheckoutPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-WorldpayCSEPaymentAndBillingCheckoutPage;MiniCart;;MiniCartSlot;true
+;;PaymentButtons-WorldpayCSEPaymentAndBillingCheckoutPage;PaymentButtons;;WorldpayPaymentButtonsSlot;true
+;;Footer-WorldpayCSEPaymentAndBillingCheckoutPage;Footer;;FooterSlot;true
+;;HeaderLinks-WorldpayCSEPaymentAndBillingCheckoutPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-WorldpayCSEPaymentAndBillingCheckoutPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-WorldpayCSEPaymentAndBillingCheckoutPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-WorldpayCSEPaymentAndBillingCheckoutPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-WorldpayCSEPaymentAndBillingCheckoutPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+# Bind Content Slots to the Worldpay Lightbox Payment And Billing Checkout Page Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='WorldpayLightboxPaymentAndBillingCheckoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-WorldpayLightboxPaymentAndBillingCheckoutPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-WorldpayLightboxPaymentAndBillingCheckoutPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-WorldpayLightboxPaymentAndBillingCheckoutPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-WorldpayLightboxPaymentAndBillingCheckoutPage;MiniCart;;MiniCartSlot;true
+;;PaymentButtons-WorldpayLightboxPaymentAndBillingCheckoutPage;PaymentButtons;;WorldpayPaymentButtonsSlot;true
+;;Footer-WorldpayLightboxPaymentAndBillingCheckoutPage;Footer;;FooterSlot;true
+;;HeaderLinks-WorldpayLightboxPaymentAndBillingCheckoutPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-WorldpayLightboxPaymentAndBillingCheckoutPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-WorldpayLightboxPaymentAndBillingCheckoutPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-WorldpayLightboxPaymentAndBillingCheckoutPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-WorldpayLightboxPaymentAndBillingCheckoutPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+# Bind Content Slots to the Worldpay Iframe payment And Billing Checkout Page Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='WorldpayIframePaymentAndBillingCheckoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-WorldpayIframePaymentAndBillingCheckoutPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-WorldpayIframePaymentAndBillingCheckoutPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-WorldpayIframePaymentAndBillingCheckoutPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-WorldpayIframePaymentAndBillingCheckoutPage;MiniCart;;MiniCartSlot;true
+;;PaymentButtons-WorldpayIframePaymentAndBillingCheckoutPage;PaymentButtons;;WorldpayPaymentButtonsSlot;true
+;;Footer-WorldpayIframePaymentAndBillingCheckoutPage;Footer;;FooterSlot;true
+;;HeaderLinks-WorldpayIframePaymentAndBillingCheckoutPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-WorldpayIframePaymentAndBillingCheckoutPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-WorldpayIframePaymentAndBillingCheckoutPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-WorldpayIframePaymentAndBillingCheckoutPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-WorldpayIframePaymentAndBillingCheckoutPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+#% if: "responsive".equalsIgnoreCase(Config.getParameter("commerceservices.default.desktop.ui.experience"));
+INSERT_UPDATE WorldpayPaymentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false'];
+;;worldpayPaymentAndBillingCheckoutPage;Worldpay Payment And Billing Checkout Page;WorldpayCSEPaymentAndBillingCheckoutPageTemplate;worldpayPaymentAndBillingCheckoutStep
+
+REMOVE PageTemplate;$contentCV[unique=true];uid[unique=true]
+;;WorldpayLightboxPaymentAndBillingCheckoutPageTemplate
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;restrictedPageTypes(code);velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;WorldpayCSEPaymentAndBillingCheckoutPageTemplate;Worldpay Responsive CSE Payment Page Template;WorldpayPaymentPage;$jarResourceCmsCockpit/structure-view/responsive/structure_WorldpayResponsiveCSEPaymentAndBillingCheckoutPageTemplate.vm
+;;WorldpayPaymentAndBillingCheckoutPageTemplate;Worldpay Redirect Payment Page Template;WorldpayPaymentPage;$jarResourceCmsCockpit/structure-view/responsive/structure_WorldpayResponsivePaymentAndBillingCheckoutPageTemplate.vm
+;;WorldpayIframePaymentAndBillingCheckoutPageTemplate;Worldpay Responsive iFrame Payment Page Template;WorldpayPaymentPage;$jarResourceCmsCockpit/structure-view/responsive/structure_WorldpayResponsiveIframePaymentAndBillingCheckoutPageTemplate.vm
+
+#% endif:

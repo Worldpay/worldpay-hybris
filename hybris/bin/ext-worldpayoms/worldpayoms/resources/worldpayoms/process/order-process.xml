@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="checkOrder"
+         name="order-process" processClass="de.hybris.platform.orderprocessing.model.OrderProcessModel">
+
+    <!-- Since worldpay process paymentTransactions asynchronously, it is necessary to add wait-steps to the order process -->
+    <action id="checkOrder" bean="checkOrderAction">
+        <transition name="OK" to="checkAuthorizeOrderPayment"/>
+        <transition name="NOK" to="error"/>
+    </action>
+
+    <!-- New transition WAIT to wait for authorisation from worldpay -->
+    <action id="checkAuthorizeOrderPayment" bean="checkAuthorizeOrderPaymentAction">
+        <transition name="OK" to="fraudCheck"/>
+        <transition name="NOK" to="sendPaymentFailedNotification"/>
+        <transition name="WAIT" to="waitFor_AUTHORIZATION"/>
+    </action>
+
+    <!-- New WAIT to be kicked off by worldpay when transaction is authorized by worldpay -->
+    <wait id="waitFor_AUTHORIZATION" then="checkAuthorizeOrderPayment" prependProcessCode="false">
+        <event>${process.code}_AUTHORIZATION</event>
+    </wait>
+
+    <!-- This action is managed by worldpayFraudCheckOrderInternalAction -->
+    <action id="fraudCheck" bean="fraudCheckOrderInternalAction">
+        <transition name="OK" to="sendOrderPlacedNotification"/>
+        <transition name="POTENTIAL" to="manualOrderCheckCSA"/>
+    </action>
+
+    <!-- Fraud Check : POTENTIAL -->
+    <action id="manualOrderCheckCSA" bean="prepareOrderForManualCheckAction">
+        <transition name="OK" to="waitForManualOrderCheckCSA"/>
+    </action>
+
+    <wait id="waitForManualOrderCheckCSA" then="orderManualChecked" prependProcessCode="true">
+        <event>CSAOrderVerified</event>
+    </wait>
+
+    <action id="orderManualChecked" bean="orderManualCheckedAction">
+        <transition name="OK" to="sendOrderPlacedNotification"/>
+        <transition name="NOK" to="cancelOrder"/>
+        <transition name="UNDEFINED" to="waitForManualOrderCheckCSA"/>
+    </action>
+
+    <action id="cancelOrder" bean="cancelOrderAction">
+        <transition name="OK" to="failed"/>
+    </action>
+
+    <!-- Fraud Check : OK -->
+    <action id="sendOrderPlacedNotification" bean="sendOrderPlacedNotificationAction">
+        <transition name="OK" to="geocodeShippingAddress"/>
+    </action>
+
+    <!-- Sourcing and Allocation -->
+    <action id="geocodeShippingAddress" bean="geocodeShippingAddressAction">
+        <transition name="OK" to="sourceOrder"/>
+    </action>
+
+    <action id="sourceOrder" bean="sourceOrderAction">
+        <transition name="OK" to="waitForOrderAction"/>
+    </action>
+
+    <!-- Wait to perform action on Order -->
+    <wait id="waitForOrderAction" prependProcessCode="true" then="failed">
+        <case event="OrderActionEvent">
+            <choice id="consignmentProcessEnded" then="verifyOrderCompletion"/>
+            <choice id="cancelOrder" then="processOrderCancellation"/>
+            <choice id="reSource" then="sourceOrder"/>
+        </case>
+    </wait>
+
+    <action id="processOrderCancellation" bean="processOrderCancellationAction">
+        <transition name="OK" to="worldpayCancelPayment"/>
+        <transition name="WAIT" to="waitForOrderAction"/>
+        <transition name="SOURCING" to="sourceOrder"/>
+    </action>
+
+    <action id="worldpayCancelPayment" bean="worldpayCancelPaymentAction">
+        <transition name="OK" to="verifyOrderCompletion"/>
+        <transition name="NOK" to="sendPaymentFailedNotification"/>
+    </action>
+
+    <action id="verifyOrderCompletion" bean="verifyOrderCompletionAction">
+        <transition name="OK" to="postTaxes"/>
+        <transition name="WAIT" to="waitForOrderAction"/>
+        <transition name="CANCELLED" to="success"/>
+    </action>
+
+    <!-- Tax and Payment -->
+    <action id="postTaxes" bean="postTaxesAction">
+        <transition name="OK" to="takePayment"/>
+    </action>
+
+    <action id="takePayment" bean="takePaymentAction">
+        <transition name="OK" to="completeOrder"/>
+        <transition name="NOK" to="sendPaymentFailedNotification"/>
+        <transition name="WAIT" to="waitFor_CAPTURE"/>
+    </action>
+
+    <wait id="waitFor_CAPTURE" then="takePayment" prependProcessCode="false">
+        <event>${process.code}_CAPTURE</event>
+    </wait>
+
+    <action id="completeOrder" bean="completeOrderAction">
+        <transition name="OK" to="success"/>
+    </action>
+
+    <action id="sendPaymentFailedNotification" bean="sendPaymentFailedNotificationAction">
+        <transition name="OK" to="failed"/>
+    </action>
+
+    <end id="error" state="ERROR">Order process error.</end>
+    <end id="failed" state="FAILED">Order process failed.</end>
+    <end id="success" state="SUCCEEDED">Order process completed.</end>
+</process>

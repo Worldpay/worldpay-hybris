@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="web/src"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry kind="src" path="web/webroot/WEB-INF/tags"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="web/testsrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/worldpayapi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/addonsupport"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

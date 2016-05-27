@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties">
+            <util:properties>
+                <prop key="cmsPageBeforeViewHandler">de.hybris.platform.yacceleratorstorefront.interceptors.beforeview.CmsPageBeforeViewHandler</prop>
+                <prop key="uiThemeResourceBeforeViewHandler">de.hybris.platform.yacceleratorstorefront.interceptors.beforeview.UiThemeResourceBeforeViewHandler</prop>
+                <prop key="defaultThemeName">blue</prop>
+            </util:properties>
+        </property>
+    </bean>
+
+
+    <!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
+    <bean id="defaultLiveeditaddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
+        <property name="addOnName" value="liveeditaddon"/>
+    </bean>
+
+    <bean id="defaultLiveeditaddonBeforeViewJsPropsHandlerAdaptee" parent="abstractBeforeViewJsPropsHandlerAdaptee" class="de.hybris.platform.addonsupport.interceptors.ExportJsPropertiesBeforeViewHandler">
+        <property name="messageSource" ref="defaultLiveeditaddonJavaScriptMessageResourceAccessor"/>
+    </bean>
+
+    <bean id="getLiveeditaddonBeforeViewHandler" parent="beforeViewHandlerAdapter">
+        <property name="adaptee">
+            <ref bean="defaultLiveeditaddonBeforeViewJsPropsHandlerAdaptee"/>
+        </property>
+    </bean>
+    <bean id="LiveeditaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+        <property name="add" ref="getLiveeditaddonBeforeViewHandler"/>
+    </bean>
+
+</beans>
